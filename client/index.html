@@ -1,0 +1,39 @@
+<html>
+<head>
+  <title>Draw Something</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 1. Load libraries -->
+  <script src="/node_modules/socket.io-client/socket.io.js"></script>
+  <script src="/node_modules/angular2/bundles/angular2-polyfills.js"></script>
+  <script src="/node_modules/systemjs/dist/system.src.js"></script>
+  <script src="/node_modules/typescript/lib/typescript.js"></script>
+  <script src="/node_modules/rxjs/bundles/Rx.js"></script>
+  <script src="/node_modules/angular2/bundles/angular2.dev.js"></script>
+  <!-- 2. Configure SystemJS -->
+  <script>
+    System.config({
+      transpiler: "typescript",
+      typescriptOptions: {
+        "module": "system",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+      },
+      packages: {
+        "app": {
+          "main": "main",
+          "defaultExtension": "ts"
+        }
+      },
+      map: {
+        "socket.io-client": "/node_modules/socket.io-client/socket.io.js"
+      }
+    });
+    System.import('app/main')
+        .then(null, console.error.bind(console));
+  </script>
+</head>
+<!-- 3. Display the application -->
+<body>
+<app>Loading...</app>
+</body>
+</html>
