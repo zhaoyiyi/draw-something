@@ -13,9 +13,23 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/client/index.html');
 });
 
+
+let users = 0;
 io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.emit('hello', 'hello from server :)');
+  users++;
+  io.emit('test', users);
+
+  socket.on('drawing', (mousePos) => {
+    console.log(mousePos);
+    socket.broadcast.emit('drawing', mousePos);
+  });
+
+  socket.on('disconnect', () => {
+    users--;
+    console.log('one user left');
+    io.emit('test', users);
+  });
 });
 
 server.listen(PORT, () => {
