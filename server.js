@@ -20,9 +20,14 @@ io.on('connection', (socket) => {
   users++;
   io.emit('test', users);
 
-  socket.on('drawing', (mousePos) => {
-    console.log(mousePos);
-    socket.broadcast.emit('drawing', mousePos);
+  socket.on('mouseDown', (pos) => {
+    console.log(pos);
+    socket.broadcast.emit('mouseDown', pos);
+  });
+
+  socket.on('mouseDrag', (pos) => {
+    console.log(pos);
+    socket.broadcast.emit('mouseDrag', pos);
   });
 
   socket.on('disconnect', () => {
