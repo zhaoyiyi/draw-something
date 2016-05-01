@@ -20,11 +20,16 @@ let canvas = paper.setup(new paper.Canvas(500, 500));
 let path;
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
   users++;
   io.emit('test', users);
   io.emit('project:load', canvas.project.exportJSON());
 
+  socket.on('project:clear', () => {
+    canvas.project.clear();
+    socket.broadcast.emit('project:clear');
+  });
+
+  // Drawing on canvas
   socket.on('drawing:mouseDown', (pos) => {
     path = new canvas.Path();
     path.add(new canvas.Point(pos[1], pos[2]));

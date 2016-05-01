@@ -1,5 +1,5 @@
 import { Injectable } from 'angular2/core';
-declare var paper, Path, view, Tool, project;
+declare var paper;
 
 @Injectable()
 export class PaperService {
@@ -7,16 +7,14 @@ export class PaperService {
   public tool;
 
   public initPaper(canvasId) {
-    paper.install(window);
-    paper.setup(canvasId);
-    this.tool = new Tool();
-    this.tool.minDistance = 10;
-    this.tool.maxDistance = 45;
+    paper.setup(document.querySelector(`#${canvasId}`));
+    this.tool = new paper.Tool();
+    this.tool.minDistance = 15;
   }
 
   public onMouseDown = (event) => {
     // Create a new path every time the mouse is clicked
-    this.path = new Path();
+    this.path = new paper.Path();
     this.path.add(event.point);
     this.path.strokeColor = 'black';
   };
@@ -27,20 +25,24 @@ export class PaperService {
   };
 
   public processMouseDown(point) {
-    this.path = new Path();
-    this.path.add(new Point(point[1], point[2]));
+    this.path = new paper.Path();
+    this.path.add(new paper.Point(point[1], point[2]));
     this.path.strokeColor = 'black';
-    view.draw();
+    paper.view.draw();
   }
 
   public processDrawing(point) {
-    let p = new Point(point[1], point[2]);
+    let p = new paper.Point(point[1], point[2]);
     this.path.add(p);
-    view.draw();
+    paper.view.draw();
   };
 
   public loadProject(projectJSON) {
-    project.importJSON(projectJSON);
+    paper.project.importJSON(projectJSON);
+  }
+
+  public clearProject() {
+    paper.project.clear();
   }
 
 
