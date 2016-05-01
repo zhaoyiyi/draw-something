@@ -25,22 +25,25 @@ export class PaperComponent implements OnInit {
     this._paperService.tool.onMouseDrag = this._onMouseDrag.bind(this);
 
     // Incoming events
-    this._socketService.socket.on('mouseDown', (data) => {
+    this._socketService.socket.on('drawing:mouseDown', (data) => {
       this._paperService.processMouseDown(data);
     });
-    this._socketService.socket.on('mouseDrag', (data) => {
+    this._socketService.socket.on('drawing:mouseDrag', (data) => {
       this._paperService.processDrawing(data);
+    });
+    this._socketService.socket.on('project:load', (data) => {
+      this._paperService.loadProject(data);
     });
   }
 
   private _onMouseDown(event) {
     this._paperService.onMouseDown(event);
-    this._socketService.socket.emit('mouseDown', event.point);
+    this._socketService.socket.emit('drawing:mouseDown', event.point);
   }
 
   private _onMouseDrag(event) {
     this._paperService.onMouseDrag(event);
-    this._socketService.socket.emit('mouseDrag', event.point);
+    this._socketService.socket.emit('drawing:mouseDrag', event.point);
   }
 
 }

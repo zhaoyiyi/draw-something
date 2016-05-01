@@ -1,5 +1,5 @@
 import { Injectable } from 'angular2/core';
-declare var paper, Path, view, Tool;
+declare var paper, Path, view, Tool, project;
 
 @Injectable()
 export class PaperService {
@@ -38,6 +38,10 @@ export class PaperService {
     this.path.add(p);
     view.draw();
   };
+
+  public loadProject(projectJSON) {
+    project.importJSON(projectJSON);
+  }
 
 
 }
