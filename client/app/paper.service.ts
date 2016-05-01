@@ -9,7 +9,7 @@ export class PaperService {
   public initPaper(canvasId) {
     paper.setup(document.querySelector(`#${canvasId}`));
     this.tool = new paper.Tool();
-    this.tool.minDistance = 15;
+    this.tool.minDistance = 10;
   }
 
   public onMouseDown = (event) => {

@@ -13,7 +13,6 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/client/index.html');
 });
 
-// todo: add server side paperjs to store drawings
 
 let users = 0;
 let canvas = paper.setup(new paper.Canvas(500, 500));
@@ -43,10 +42,14 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('drawing:mouseDrag', pos);
   });
 
+  // Chat
+  socket.on('chat:newMessage', (msg) => {
+    socket.broadcast.emit('chat:newMessage', msg);
+  });
+
   // Disconnect
   socket.on('disconnect', () => {
     users--;
-    console.log('one user left');
     io.emit('test', users);
   });
 });
