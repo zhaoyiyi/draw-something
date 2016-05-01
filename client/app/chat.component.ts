@@ -7,7 +7,10 @@ import { SocketService } from "./socket.service";
   template: `
     <div style="height: 300px; border: 1px solid black">
       <h2>Chat</h2>
-      <p *ngFor="let msg of messages">{{msg}}</p>
+      <p *ngFor="let msg of messages" 
+        [ngStyle]="{'text-align': msg.user === '_self' ? 'right' : 'left'}">
+        <span *ngIf="msg.user !== '_self'">{{msg.user}}: </span> {{msg.message}}
+      </p>
     </div>
     <form action="" #chatForm="ngForm" (ngSubmit)="sendMessage(chatForm.value.msg)">
       <input type="text" [(ngModel)]="msg" ngControl="msg" required>
@@ -19,6 +22,7 @@ import { SocketService } from "./socket.service";
 export class ChatComponent {
   public messages: Array<string> = [];
   public msg: string;
+  public username: string;
   public socket;
 
   constructor(private _chatService: ChatService,
@@ -34,7 +38,7 @@ export class ChatComponent {
     // rest msg input box
     this.msg = '';
 
-    this.messages.push(value);
+    this.messages.push({user: '_self', message: value});
     this.socket.emit('chat:newMessage', value);
   }
 }

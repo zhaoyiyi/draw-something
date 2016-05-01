@@ -14,15 +14,20 @@ app.get('/', (req, res) => {
 });
 
 
-let users = 0;
+let users = {};
 let canvas = paper.setup(new paper.Canvas(500, 500));
 let path;
 
 io.on('connection', (socket) => {
-  users++;
-  io.emit('test', users);
+  users[socket.id] = {};
   io.emit('project:load', canvas.project.exportJSON());
 
+
+  socket.on('project:userChange', (name) => {
+    users[socket.id].name = name;
+    let userList = Object.keys(users).map( key => users[key]);
+    io.emit('project:userChange', userList);
+  });
   socket.on('project:clear', () => {
     canvas.project.clear();
     socket.broadcast.emit('project:clear');
@@ -44,13 +49,14 @@ io.on('connection', (socket) => {
 
   // Chat
   socket.on('chat:newMessage', (msg) => {
-    socket.broadcast.emit('chat:newMessage', msg);
+    socket.broadcast.emit('chat:newMessage', {user: users[socket.id].name, message: msg});
   });
 
   // Disconnect
   socket.on('disconnect', () => {
-    users--;
-    io.emit('test', users);
+    delete users[socket.id];
+    let userList = Object.keys(users).map( key => users[key]);
+    io.emit('project:userChange', userList);
   });
 });
 
