@@ -1,24 +1,40 @@
 import { Component } from 'angular2/core';
-import { SocketService } from './socket.service';
-import { PaperComponent } from './paper.component';
-import { ChatComponent } from './chat.component';
-import { InfoComponent } from './info.component';
+import { GameComponent } from './game.component';
+import { LobbyComponent } from './lobby.component';
+import { SocketService } from "./socket.service";
 @Component({
   selector: 'app',
   template: `
-    <h1>hello</h1>
-    <info></info>
-    <paper></paper>
-    <chat></chat>
+    <div *ngIf="!isPlaying">
+      <lobby> </lobby>
+    </div>
+    
+    <div *ngIf="isPlaying">
+      <game [word]="word"> </game>
+    </div>
   `,
-  providers: [SocketService],
-  directives: [PaperComponent, ChatComponent, InfoComponent]
+  directives: [GameComponent, LobbyComponent]
 })
 export class AppComponent {
-  public msg: string;
+  public socket;
+  public word: string;
+  public isPlaying: boolean;
 
   constructor(private _socketService: SocketService) {
-    this._socketService.socket.on('test', (data) => this.msg = data);
-    this._socketService.socket.on('drawing', mousePos => console.log(mousePos));
+    this.socket = _socketService.socket;
+
+    this.socket.on('game:start', () => {
+      console.log('game start');
+      this.isPlaying = true;
+    });
+
+    this.socket.on('game:drawer', (word) => {
+      console.log('game drawer', word);
+      this.word = word;
+    });
+
+    this.socket.on('game:end', (winner) => {
+      console.log('game end');
+    });
   }
 }

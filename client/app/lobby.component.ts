@@ -1,9 +1,7 @@
-import { Component } from 'angular2/core';
+import { Component, Output } from 'angular2/core';
 import { SocketService } from "./socket.service";
-import { Router } from "angular2/router";
-
 @Component({
-  selector: 'info',
+  selector: 'lobby',
   template: `
     <div *ngIf="!username">
       <form action="" #nameForm="ngForm" (ngSubmit)="setUsername(nameForm.value.username)">
@@ -20,31 +18,15 @@ import { Router } from "angular2/router";
     </div>
   `
 })
-export class InfoComponent {
+export class LobbyComponent {
   public userList: Array;
   public username: string;
   public socket;
-  public isDrawer: boolean;
 
-  constructor(private _socketService: SocketService,
-              private _router: Router) {
+  constructor(private _socketService: SocketService) {
     this.socket = _socketService.socket;
     this.socket.on('project:userChange', (userList) => {
       this.userList = userList;
-    });
-
-    this.socket.on('game:start', () => {
-      console.log('game start');
-      this._router.navigate(['Game', {isDrawer: this.isDrawer}]);
-    });
-
-    this.socket.on('game:drawer', () => {
-      console.log('game drawer');
-      this.isDrawer = true;
-    });
-
-    this.socket.on('game:end', (winner) => {
-      console.log('game end');
     });
   }
 

@@ -6,10 +6,13 @@ export class PaperService {
   public path;
   public tool;
 
-  public initPaper(canvasId) {
-    paper.setup(document.querySelector(`#${canvasId}`));
+  constructor() {
     this.tool = new paper.Tool();
     this.tool.minDistance = 10;
+  }
+
+  public initPaper(canvasId) {
+    paper.setup(document.querySelector(`#${canvasId}`));
   }
 
   public onMouseDown = (event) => {

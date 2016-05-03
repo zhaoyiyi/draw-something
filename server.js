@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 app.use('/app', express.static(__dirname + '/client/app'));
 
-app.get('/', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(__dirname + '/client/index.html');
 });
 
@@ -23,7 +23,7 @@ let canvas = paper.setup(new paper.Canvas(500, 500));
 let path;
 
 io.on('connection', (socket) => {
-  users[socket.id] = new User();
+  users[socket.id] = new User(socket.id);
   let user = users[socket.id];
 
   io.emit('project:load', canvas.project.exportJSON());
@@ -65,15 +65,16 @@ io.on('connection', (socket) => {
   // Game
   socket.on('game:ready', () => {
     user.isReady = true;
+    let userArray = R.values(users);
     let isReady = R.propEq('isReady', true);
-    let allReady = R.all(isReady)(R.values(users));
+    let allReady = R.all(isReady)(userArray);
     if (allReady) {
       game = new Game();
+      let randomIndex = Math.floor(Math.random() * userArray.length);
+      io.to(userArray[randomIndex].id).emit('game:drawer', game.answer);
       io.emit('game:start');
     }
   });
-
-
 
   // Disconnect
   socket.on('disconnect', () => {
