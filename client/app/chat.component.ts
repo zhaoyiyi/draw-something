@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ChatService } from './chat.service';
 import { SocketService } from "./socket.service";
 
@@ -21,18 +21,19 @@ import { SocketService } from "./socket.service";
   `,
   providers: [ChatService]
 })
-export class ChatComponent {
+export class ChatComponent implements OnInit {
   @Input()
   public isDrawer: boolean;
-  public messages: Array<string> = [];
+  public messages: Array<any> = [];
   public msg: string;
-  public username: string;
   public socket;
 
   constructor(private _chatService: ChatService,
               private _socketService: SocketService) {
     this.socket = _socketService.socket;
+  }
 
+  public ngOnInit() {
     this.socket.on('chat:newMessage', (msg) => {
       this.messages.push(msg);
     });
@@ -42,7 +43,7 @@ export class ChatComponent {
     // rest msg input box
     this.msg = '';
 
-    this.messages.push({user: '_self', message: value});
+    this.messages.push({ user: '_self', message: value });
     this.socket.emit('chat:newMessage', value);
   }
 }

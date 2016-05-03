@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GameComponent } from './game.component';
 import { LobbyComponent } from './lobby.component';
 import { SocketService } from "./socket.service";
@@ -15,17 +15,20 @@ import { SocketService } from "./socket.service";
   `,
   directives: [GameComponent, LobbyComponent]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   public socket;
   public word: string;
   public isPlaying: boolean;
 
   constructor(private _socketService: SocketService) {
     this.socket = _socketService.socket;
+  }
 
+  public ngOnInit() {
     this.socket.on('game:start', () => {
       console.log('game start');
       this.isPlaying = true;
+      console.log(this.isPlaying);
     });
 
     this.socket.on('game:drawer', (word) => {

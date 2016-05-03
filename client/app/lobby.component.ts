@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SocketService } from "./socket.service";
 @Component({
   selector: 'lobby',
@@ -18,13 +18,17 @@ import { SocketService } from "./socket.service";
     </div>
   `
 })
-export class LobbyComponent {
-  public userList: Array;
+export class LobbyComponent implements OnInit {
+  public userList: Array<any>;
   public username: string;
   public socket;
 
   constructor(private _socketService: SocketService) {
     this.socket = _socketService.socket;
+
+  }
+
+  public ngOnInit() {
     this.socket.on('project:userChange', (userList) => {
       this.userList = userList;
     });

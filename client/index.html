@@ -3,16 +3,17 @@
   <base href="/">
   <title>Draw Something</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- 1. Load libraries -->
+  <!-- other libraries -->
   <script src="/node_modules/socket.io-client/socket.io.js"></script>
   <script src="/node_modules/paper/dist/paper-full.min.js"></script>
-
-  <script src="/node_modules/es6-shim/es6-shim.min.js"></script>
-  <script src="/node_modules/reflect-metadata/Reflect.js"></script>
-  <script src="/node_modules/zone.js/dist/zone.js"></script>
-
-  <script src="/node_modules/systemjs/dist/system.src.js"></script>
+  <!-- typescript -->
   <script src="/node_modules/typescript/lib/typescript.js"></script>
+  <!-- angular -->
+  <script src="/node_modules/es6-shim/es6-shim.min.js"></script>
+  <script src="/node_modules/zone.js/dist/zone.js"></script>
+  <script src="/node_modules/reflect-metadata/Reflect.js"></script>
+  <!-- systemjs -->
+  <script src="/node_modules/systemjs/dist/system.src.js"></script>
 
   <!-- 2. Configure SystemJS -->
   <script>
@@ -25,11 +26,38 @@
       },
       packages: {
         "app": {
-          "main": "main",
-          "defaultExtension": "ts"
+          main: "main",
+          defaultExtension: 'ts'
+        },
+        '@angular/core': {
+          main: 'index'
+        },
+        '@angular/platform-browser-dynamic': {
+          main: 'index'
+        },
+        '@angular/platform-browser': {
+          main: 'index'
+        },
+        '@angular/common': {
+          main: 'index'
+        },
+        '@angular/compiler': {
+          main: 'index'
+        },
+        '@angular/router-deprecated': {
+          main: 'index'
+        },
+        "rxjs": {
+          defaultExtension: 'js'
         }
       },
+      paths: {
+        '@angular/*': '/node_modules/@angular/*',
+        "rxjs/*": "/node_modules/rxjs/*",
+        "reflect-metadata": "/node_modules/reflect-metadata"
+      },
       map: {
+        "rxjs": "node_modules/rxjs",
         "socket.io-client": "/node_modules/socket.io-client/socket.io.js"
       }
     });
