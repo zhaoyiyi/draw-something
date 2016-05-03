@@ -10,7 +10,8 @@ import { SocketService } from "./socket.service";
         <button type="submit" [disabled]="!nameForm.valid">set</button>
       </form>
     </div>
-    <div>
+    <button (click)="ready()">I'm Ready</button>
+    <div *ngIf="userList">
       <h2>Current Users</h2>
       <ul>
         <li *ngFor="let user of userList">{{user.name}}</li>
@@ -29,10 +30,22 @@ export class InfoComponent {
       console.log(userList);
       this.userList = userList;
     });
+
+    this.socket.on('game:start', () => {
+      console.log('game start');
+    });
+
+    this.socket.on('game:end', (winner) => {
+      console.log('game end');
+    });
   }
 
   public setUsername(name) {
     this.username = name;
     this.socket.emit('project:userChange', name);
+  }
+
+  public ready() {
+    this.socket.emit('game:ready');
   }
 }

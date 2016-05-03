@@ -1,9 +1,12 @@
 "use strict";
 let paper = require('paper');
 let express = require('express');
+var R = require('ramda');
 let app = express();
 let server = require('http').createServer(app);
 let io = require('socket.io')(server);
+let User = require('./server/user');
+let Game = require('./server/game');
 
 const PORT = process.env.PORT || 3000;
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
@@ -15,16 +18,18 @@ app.get('/', (req, res) => {
 
 
 let users = {};
+let game;
 let canvas = paper.setup(new paper.Canvas(500, 500));
 let path;
 
 io.on('connection', (socket) => {
-  users[socket.id] = {};
+  users[socket.id] = new User();
+  let user = users[socket.id];
+
   io.emit('project:load', canvas.project.exportJSON());
 
-
   socket.on('project:userChange', (name) => {
-    users[socket.id].name = name;
+    user.name = name;
     let userList = Object.keys(users).map( key => users[key]);
     io.emit('project:userChange', userList);
   });
@@ -49,8 +54,26 @@ io.on('connection', (socket) => {
 
   // Chat
   socket.on('chat:newMessage', (msg) => {
-    socket.broadcast.emit('chat:newMessage', {user: users[socket.id].name, message: msg});
+    if (game.match(msg)) {
+      user.score += 1;
+      io.emit('game:end', {user: user.name, message: msg});
+    } else {
+      socket.broadcast.emit('chat:newMessage', {user: user.name, message: msg});
+    }
   });
+
+  // Game
+  socket.on('game:ready', () => {
+    user.isReady = true;
+    let isReady = R.propEq('isReady', true);
+    let allReady = R.all(isReady)(R.values(users));
+    if (allReady) {
+      game = new Game();
+      io.emit('game:start');
+    }
+  });
+
+
 
   // Disconnect
   socket.on('disconnect', () => {
