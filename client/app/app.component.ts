@@ -1,4 +1,4 @@
-import { Component } from 'angular2/core';
+import { Component } from '@angular/core';
 import { GameComponent } from './game.component';
 import { LobbyComponent } from './lobby.component';
 import { SocketService } from "./socket.service";

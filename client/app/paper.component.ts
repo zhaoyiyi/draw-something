@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from 'angular2/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { SocketService } from "./socket.service";
 import { PaperService } from './paper.service';
 

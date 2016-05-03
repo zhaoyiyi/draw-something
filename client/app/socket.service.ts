@@ -1,4 +1,4 @@
-import { Injectable } from 'angular2/core';
+import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 
 const SERVER_URL = 'http://localhost:3000';

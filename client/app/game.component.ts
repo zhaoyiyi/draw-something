@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from 'angular2/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { PaperComponent } from './paper.component';
 import { ChatComponent } from './chat.component';
 @Component({
@@ -6,7 +6,7 @@ import { ChatComponent } from './chat.component';
   template: `
     <p>{{word}}</p>
     <paper [isDrawer]="isDrawer"> </paper>
-    <chat> </chat>
+    <chat [isDrawer]="isDrawer"> </chat>
   `,
   directives: [PaperComponent, ChatComponent]
 })

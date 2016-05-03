@@ -1,6 +1,6 @@
-import { Component } from 'angular2/core';
+import { Component } from '@angular/core';
+import { Router } from "@angular/router-deprecated";
 import { SocketService } from "./socket.service";
-import { Router } from "angular2/router";
 
 @Component({
   selector: 'info',

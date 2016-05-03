@@ -1,5 +1,4 @@
 "use strict";
-let paper = require('paper');
 let express = require('express');
 var R = require('ramda');
 let app = express();
@@ -7,6 +6,7 @@ let server = require('http').createServer(app);
 let io = require('socket.io')(server);
 let User = require('./server/user');
 let Game = require('./server/game');
+let Canvas = require('./server/canvas');
 
 const PORT = process.env.PORT || 3000;
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
@@ -18,15 +18,12 @@ app.get('/*', (req, res) => {
 
 
 let users = {};
-let game;
-let canvas = paper.setup(new paper.Canvas(500, 500));
-let path;
+let game = new Game();
+let canvas = new Canvas();
 
 io.on('connection', (socket) => {
   users[socket.id] = new User(socket.id);
   let user = users[socket.id];
-
-  io.emit('project:load', canvas.project.exportJSON());
 
   socket.on('project:userChange', (name) => {
     user.name = name;
@@ -34,21 +31,18 @@ io.on('connection', (socket) => {
     io.emit('project:userChange', userList);
   });
   socket.on('project:clear', () => {
-    canvas.project.clear();
+    canvas.clear();
     socket.broadcast.emit('project:clear');
   });
 
   // Drawing on canvas
   socket.on('drawing:mouseDown', (pos) => {
-    path = new canvas.Path();
-    path.add(new canvas.Point(pos[1], pos[2]));
-    path.strokeColor = 'black';
+    canvas.mouseDown(pos[1], pos[2]);
     socket.broadcast.emit('drawing:mouseDown', pos);
   });
 
   socket.on('drawing:mouseDrag', (pos) => {
-    let p = new canvas.Point(pos[1], pos[2]);
-    path.add(p);
+    canvas.mouseDrag(pos[1], pos[2]);
     socket.broadcast.emit('drawing:mouseDrag', pos);
   });
 
@@ -56,6 +50,7 @@ io.on('connection', (socket) => {
   socket.on('chat:newMessage', (msg) => {
     if (game.match(msg)) {
       user.score += 1;
+      game.isPlaying = false;
       io.emit('game:end', {user: user.name, message: msg});
     } else {
       socket.broadcast.emit('chat:newMessage', {user: user.name, message: msg});
@@ -68,18 +63,28 @@ io.on('connection', (socket) => {
     let userArray = R.values(users);
     let isReady = R.propEq('isReady', true);
     let allReady = R.all(isReady)(userArray);
-    if (allReady) {
-      game = new Game();
+    if (allReady && !game.isPlaying) {
+      game.newWord();
+      game.isPlaying = true;
       let randomIndex = Math.floor(Math.random() * userArray.length);
-      io.to(userArray[randomIndex].id).emit('game:drawer', game.answer);
       io.emit('game:start');
+      io.to(userArray[randomIndex].id).emit('game:drawer', game.answer);
     }
+    if(game.isPlaying) {
+      socket.emit('game:start');
+    }
+
+    io.emit('project:load', canvas.exportJSON());
   });
 
   // Disconnect
   socket.on('disconnect', () => {
     delete users[socket.id];
     let userList = Object.keys(users).map( key => users[key]);
+    if (userList.length === 0) {
+      game.isPlaying = false;
+      canvas.clear();
+    }
     io.emit('project:userChange', userList);
   });
 });

@@ -1,4 +1,4 @@
-import { Component, Output } from 'angular2/core';
+import { Component } from '@angular/core';
 import { SocketService } from "./socket.service";
 @Component({
   selector: 'lobby',
