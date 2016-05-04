@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { ChatService } from './chat.service';
 import { SocketService } from "./socket.service";
 
@@ -21,7 +21,7 @@ import { SocketService } from "./socket.service";
   `,
   providers: [ChatService]
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnChanges {
   @Input()
   public isDrawer: boolean;
   public messages: Array<any> = [];
@@ -37,6 +37,10 @@ export class ChatComponent implements OnInit {
     this.socket.on('chat:newMessage', (msg) => {
       this.messages.push(msg);
     });
+  }
+
+  public ngOnChanges() {
+    console.log('is drawer', this.isDrawer);
   }
 
   public sendMessage(value) {

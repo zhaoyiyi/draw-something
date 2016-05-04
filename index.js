@@ -4,7 +4,8 @@ var R = require('ramda');
 let app = express();
 let server = require('http').createServer(app);
 let io = require('socket.io')(server);
-let User = require('./server/user');
+
+let Users = require('./server/users');
 let Game = require('./server/game');
 let Canvas = require('./server/canvas');
 
@@ -17,15 +18,13 @@ app.get('/*', (req, res) => {
 });
 
 
-let users = {};
+let users = new Users();
 let game = new Game();
 let canvas = new Canvas();
 
 io.on('connection', (socket) => {
-  users[socket.id] = new User(socket.id);
-  let user = users[socket.id];
-
-
+  users.addUser(socket.id);
+  let user = users.find(socket.id);
 
   // Drawing on canvas
   socket.on('drawing:mouseDown', (pos) => {
@@ -48,6 +47,8 @@ io.on('connection', (socket) => {
     if (game.match(msg)) {
       user.score += 1;
       game.isPlaying = false;
+      users.unReadyAll();
+      canvas.clear();
       io.emit('game:end', {name: user.name, message: msg});
     } else {
       socket.broadcast.emit('chat:newMessage', {user: user.name, message: msg});
@@ -57,43 +58,37 @@ io.on('connection', (socket) => {
   // Game
   socket.on('game:ready', () => {
     user.isReady = true;
-    let userArray = R.values(users);
-    let isReady = R.propEq('isReady', true);
-    let allReady = R.all(isReady)(userArray);
-    if (allReady && !game.isPlaying) {
+    
+    if (users.allReady() && !game.isPlaying) {
+      let drawerId = users.pickDrawer();
       game.newWord();
       game.isPlaying = true;
-      let randomIndex = Math.floor(Math.random() * userArray.length);
       io.emit('game:start');
-      io.to(userArray[randomIndex].id).emit('game:drawer', game.answer);
+      io.to(drawerId).emit('game:drawer', game.answer);
     }
     if(game.isPlaying) {
       socket.emit('game:start');
     }
-
-    io.emit('project:load', canvas.exportJSON());
+    io.emit('drawing:load', canvas.exportJSON());
   });
 
   socket.on('game:setUsername', (name) => {
     user.name = name;
-    let userList = Object.keys(users).map( key => users[key]);
-    io.emit('game:userList', userList);
+    io.emit('game:userList', users.getUserList());
   });
 
   socket.on('game:userList', () => {
-    let userList = Object.keys(users).map( key => users[key]);
-    socket.emit('game:userList', userList);
+    socket.emit('game:userList', users.getUserList());
   });
 
   // Disconnect
   socket.on('disconnect', () => {
-    delete users[socket.id];
-    let userList = Object.keys(users).map( key => users[key]);
-    if (userList.length === 0) {
+    users.removeUser(socket.id);
+    if (users.getUserList().length === 0) {
       game.isPlaying = false;
       canvas.clear();
     }
-    io.emit('project:userChange', userList);
+    io.emit('project:userChange', users.getUserList());
   });
 });
 

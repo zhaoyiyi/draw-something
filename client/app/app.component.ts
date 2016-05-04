@@ -11,7 +11,7 @@ import { PlayerService } from './player.service';
     </div>
     
     <div *ngIf="isPlaying">
-      <game [word]="word"> </game>
+      <game [isDrawer]="isDrawer" [word]="word"> </game>
     </div>
   `,
   directives: [GameComponent, LobbyComponent],
@@ -20,6 +20,7 @@ import { PlayerService } from './player.service';
 export class AppComponent implements OnInit {
   public socket;
   public word: string;
+  public isDrawer: boolean =  false;
   public isPlaying: boolean;
   public winner: Object;
 
@@ -37,6 +38,7 @@ export class AppComponent implements OnInit {
     this.socket.on('game:drawer', (word) => {
       console.log('game drawer', word);
       this.word = word;
+      this.isDrawer = true;
     });
 
     this.socket.on('game:end', (winner) => {
@@ -44,6 +46,8 @@ export class AppComponent implements OnInit {
       console.log(winner);
       this.winner = winner;
       this.isPlaying = false;
+      this.isDrawer = false;
+      this.word = '';
     });
   }
 }

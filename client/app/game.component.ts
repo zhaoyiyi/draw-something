@@ -10,12 +10,10 @@ import { ChatComponent } from './chat.component';
   `,
   directives: [PaperComponent, ChatComponent]
 })
-export class GameComponent implements OnChanges {
+export class GameComponent {
   @Input()
   public word: string;
+  @Input()
   public isDrawer: boolean;
 
-  public ngOnChanges() {
-    if (this.word) this.isDrawer = true;
-  }
 }

@@ -36,10 +36,10 @@ export class PaperComponent implements OnInit, OnChanges {
     this.socket.on('drawing:mouseDrag', (data) => {
       this._paperService.processDrawing(data);
     });
-    this.socket.on('project:load', (data) => {
+    this.socket.on('drawing:load', (data) => {
       this._paperService.loadProject(data);
     });
-    this.socket.on('project:clear', () => {
+    this.socket.on('drawing:clear', () => {
       this._paperService.clearProject();
     });
   }
