@@ -25,15 +25,7 @@ io.on('connection', (socket) => {
   users[socket.id] = new User(socket.id);
   let user = users[socket.id];
 
-  socket.on('project:userChange', (name) => {
-    user.name = name;
-    let userList = Object.keys(users).map( key => users[key]);
-    io.emit('project:userChange', userList);
-  });
-  socket.on('project:clear', () => {
-    canvas.clear();
-    socket.broadcast.emit('project:clear');
-  });
+
 
   // Drawing on canvas
   socket.on('drawing:mouseDown', (pos) => {
@@ -46,12 +38,17 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('drawing:mouseDrag', pos);
   });
 
+  socket.on('drawing:clear', () => {
+    canvas.clear();
+    socket.broadcast.emit('drawing:clear');
+  });
+
   // Chat
   socket.on('chat:newMessage', (msg) => {
     if (game.match(msg)) {
       user.score += 1;
       game.isPlaying = false;
-      io.emit('game:end', {user: user.name, message: msg});
+      io.emit('game:end', {name: user.name, message: msg});
     } else {
       socket.broadcast.emit('chat:newMessage', {user: user.name, message: msg});
     }
@@ -75,6 +72,17 @@ io.on('connection', (socket) => {
     }
 
     io.emit('project:load', canvas.exportJSON());
+  });
+
+  socket.on('game:setUsername', (name) => {
+    user.name = name;
+    let userList = Object.keys(users).map( key => users[key]);
+    io.emit('game:userList', userList);
+  });
+
+  socket.on('game:userList', () => {
+    let userList = Object.keys(users).map( key => users[key]);
+    socket.emit('game:userList', userList);
   });
 
   // Disconnect

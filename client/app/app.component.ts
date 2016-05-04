@@ -2,25 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { GameComponent } from './game.component';
 import { LobbyComponent } from './lobby.component';
 import { SocketService } from "./socket.service";
+import { PlayerService } from './player.service';
 @Component({
   selector: 'app',
   template: `
     <div *ngIf="!isPlaying">
-      <lobby> </lobby>
+      <lobby [winner]="winner"> </lobby>
     </div>
     
     <div *ngIf="isPlaying">
       <game [word]="word"> </game>
     </div>
   `,
-  directives: [GameComponent, LobbyComponent]
+  directives: [GameComponent, LobbyComponent],
+  providers: [PlayerService]
 })
 export class AppComponent implements OnInit {
   public socket;
   public word: string;
   public isPlaying: boolean;
+  public winner: Object;
 
-  constructor(private _socketService: SocketService) {
+  constructor(private _socketService: SocketService,
+              private _playerService: PlayerService) {
     this.socket = _socketService.socket;
   }
 
@@ -28,7 +32,6 @@ export class AppComponent implements OnInit {
     this.socket.on('game:start', () => {
       console.log('game start');
       this.isPlaying = true;
-      console.log(this.isPlaying);
     });
 
     this.socket.on('game:drawer', (word) => {
@@ -38,6 +41,9 @@ export class AppComponent implements OnInit {
 
     this.socket.on('game:end', (winner) => {
       console.log('game end');
+      console.log(winner);
+      this.winner = winner;
+      this.isPlaying = false;
     });
   }
 }

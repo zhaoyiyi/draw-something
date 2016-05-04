@@ -54,7 +54,7 @@ export class PaperComponent implements OnInit, OnChanges {
 
   public clearPaper() {
     this._paperService.clearProject();
-    this.socket.emit('project:clear');
+    this.socket.emit('drawing:clear');
   }
 
   private _onMouseDown(event) {

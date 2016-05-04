@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SocketService } from "./socket.service";
+import { PlayerService } from "./player.service";
 @Component({
   selector: 'lobby',
   template: `
@@ -9,7 +10,11 @@ import { SocketService } from "./socket.service";
         <button type="submit" [disabled]="!nameForm.valid">set</button>
       </form>
     </div>
-    <button (click)="ready()">I'm Ready</button>
+    <div *ngIf="winner">
+      <p>Winner is {{winner.name}}</p>
+      <p>Answer is {{winner.message}}</p>
+    </div>
+    <button (click)="ready()" [disabled]="isReady">I'm Ready</button>
     <div *ngIf="userList">
       <h2>Current Users</h2>
       <ul>
@@ -21,25 +26,30 @@ import { SocketService } from "./socket.service";
 export class LobbyComponent implements OnInit {
   public userList: Array<any>;
   public username: string;
+  public isReady: boolean;
   public socket;
+  @Input()
+  public winner: Object;
 
-  constructor(private _socketService: SocketService) {
+  constructor(private _socketService: SocketService,
+              private _playerService: PlayerService) {
     this.socket = _socketService.socket;
-
   }
 
   public ngOnInit() {
-    this.socket.on('project:userChange', (userList) => {
+    this.socket.emit('game:userList');
+    this.socket.on('game:userList', (userList) => {
       this.userList = userList;
     });
+    this.username = this._playerService.name;
   }
 
   public setUsername(name) {
-    this.username = name;
-    this.socket.emit('project:userChange', name);
+    this.username = this._playerService.setUsername(name);
   }
 
   public ready() {
-    this.socket.emit('game:ready');
+    this._playerService.ready();
+    this.isReady = true;
   }
 }
