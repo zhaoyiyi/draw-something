@@ -67,10 +67,11 @@ io.on('connection', (socket) => {
       io.to(drawerId).emit('game:answer', game.answer);
       io.to(drawerId).emit('drawing:drawer');
     }
-    if(game.isPlaying) {
-      socket.emit('game:start');
-    }
-    io.emit('drawing:load', canvas.exportJSON());
+    // if(game.isPlaying) {
+    //   socket.emit('game:start');
+    //   io.emit('drawing:load', canvas.exportJSON());
+    // }
+    //
   });
 
   socket.on('game:setUsername', (name) => {

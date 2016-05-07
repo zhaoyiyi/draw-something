@@ -35,8 +35,8 @@ export class AppComponent implements OnInit {
       this.isPlaying = true;
     });
 
-    this.socket.on('game:drawer', (word) => {
-      console.log('game drawer', word);
+    this.socket.on('game:answer', (word) => {
+      console.log('game answer', word);
       this.word = word;
       this.isDrawer = true;
     });

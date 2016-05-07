@@ -5,7 +5,7 @@ import { ChatComponent } from './chat.component';
   selector: 'game',
   template: `
     <p>{{word}}</p>
-    <paper [isDrawer]="isDrawer"> </paper>
+    <paper> </paper>
     <chat [isDrawer]="isDrawer"> </chat>
   `,
   directives: [PaperComponent, ChatComponent]

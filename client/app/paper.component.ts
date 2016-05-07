@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PaperService } from './paper.service';
+
 
 @Component({
   selector: 'paper',
@@ -14,13 +15,24 @@ import { PaperService } from './paper.service';
   `,
   providers: [PaperService]
 })
-export class PaperComponent implements OnInit {
+export class PaperComponent implements OnInit, OnDestroy {
 
-  constructor( private paperService: PaperService) { }
+  isDrawer: boolean;
+
+  constructor(private paperService: PaperService) {
+  }
 
   ngOnInit() {
     this.paperService.initPaper('paper');
     this.paperService.subscribeEvent();
+    this.paperService.isDrawer().subscribe(() => {
+      this.paperService.enableDrawing();
+      this.isDrawer = true;
+    });
+  }
+
+  ngOnDestroy() {
+    this.paperService.reset();
   }
 
   clearPaper() {

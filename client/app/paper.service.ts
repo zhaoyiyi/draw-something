@@ -1,31 +1,37 @@
 import { Injectable } from '@angular/core';
+
 import { SocketService } from "./socket.service";
 declare var paper;
 
 @Injectable()
 export class PaperService {
   private socket: SocketIOClient.Socket;
-  private canvas;
+  private tool;
 
   constructor(private socketService: SocketService) {
     this.socket = socketService.socket;
   }
 
   public initPaper(canvasId) {
-    this.canvas = paper.setup(document.querySelector(`#${canvasId}`));
-    this.tool = new this.canvas.Tool();
-    this.tool.minDistance = 10;
+    paper.projects = [];
+    paper.setup(canvasId);
+    this.tool = new paper.Tool();
   }
-  
+
   public clearProject() {
-    this.canvas.project.clear();
+    paper.project.clear();
     this.socket.emit('drawing:clear');
   }
 
+  public isDrawer() {
+    return this.socketService.toObservable('drawing:drawer');
+  }
+
+  public reset() {
+    this.tool.remove();
+  }
+
   public subscribeEvent() {
-    this.socket.on('drawing:drawer', () => {
-      this.enableDrawing();
-    });
     this.socket.on('drawing:mouseDown', (data) => {
       this.processMouseDown(data);
     });
@@ -36,20 +42,19 @@ export class PaperService {
       this.loadProject(data);
     });
     this.socket.on('drawing:clear', () => {
-      this.canvas.project.clear();
+      paper.project.clear();
     });
   }
 
-
-
-  private enableDrawing() {
-    this.tool.onMouseDown = this.onMouseDown;
-    this.tool.onMouseDrag = this.onMouseDrag;
+  public enableDrawing() {
+    this.tool.minDistance = 10;
+    this.tool.on('mousedown', this.onMouseDown);
+    this.tool.on('mousedrag', this.onMouseDrag);
   }
 
   private onMouseDown = (event) => {
     // Create a new path every time the mouse is clicked
-    this.path = new this.canvas.Path();
+    this.path = new paper.Path();
     this.path.add(event.point);
     this.path.strokeColor = 'black';
     this.socket.emit('drawing:mouseDown', event.point);
@@ -64,19 +69,19 @@ export class PaperService {
   };
 
   private processMouseDown(point) {
-    this.path = new this.canvas.Path();
-    this.path.add(new this.canvas.Point(point[1], point[2]));
+    this.path = new paper.Path();
+    this.path.add(new paper.Point(point[1], point[2]));
     this.path.strokeColor = 'black';
-    this.canvas.view.draw();
+    paper.view.draw();
   }
 
   private processDrawing(point) {
-    let p = new this.canvas.Point(point[1], point[2]);
+    let p = new paper.Point(point[1], point[2]);
     this.path.add(p);
-    this.canvas.view.draw();
+    paper.view.draw();
   };
 
   private loadProject(projectJSON) {
-    this.canvas.project.importJSON(projectJSON);
+    paper.importJSON(projectJSON);
   }
 }
