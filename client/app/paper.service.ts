@@ -9,7 +9,6 @@ export class PaperService {
 
   constructor(private socketService: SocketService) {
     this.socket = socketService.socket;
-    console.log('paper service init');
   }
 
   public initPaper(canvasId) {
@@ -17,24 +16,16 @@ export class PaperService {
     this.tool = new this.canvas.Tool();
     this.tool.minDistance = 10;
   }
-
+  
   public clearProject() {
     this.canvas.project.clear();
     this.socket.emit('drawing:clear');
   }
 
-  public enableDrawing() {
-    this.tool.onMouseDown = this.onMouseDown;
-    this.tool.onMouseDrag = this.onMouseDrag;
-  }
-
-  public disableDrawing() {
-    this.tool.onMouseDown = () => {};
-    this.tool.onMouseDrag = () => {};
-    console.log('reset paper');
-  }
-
   public subscribeEvent() {
+    this.socket.on('drawing:drawer', () => {
+      this.enableDrawing();
+    });
     this.socket.on('drawing:mouseDown', (data) => {
       this.processMouseDown(data);
     });
@@ -45,11 +36,18 @@ export class PaperService {
       this.loadProject(data);
     });
     this.socket.on('drawing:clear', () => {
-      this.clearProject();
+      this.canvas.project.clear();
     });
   }
 
-  public onMouseDown = (event) => {
+
+
+  private enableDrawing() {
+    this.tool.onMouseDown = this.onMouseDown;
+    this.tool.onMouseDrag = this.onMouseDrag;
+  }
+
+  private onMouseDown = (event) => {
     // Create a new path every time the mouse is clicked
     this.path = new this.canvas.Path();
     this.path.add(event.point);
@@ -58,7 +56,7 @@ export class PaperService {
 
   };
 
-  public onMouseDrag = (event) => {
+  private onMouseDrag = (event) => {
     // Add a point to the path every time the mouse is dragged
     this.path.add(event.point);
     this.socket.emit('drawing:mouseDrag', event.point);
@@ -81,6 +79,4 @@ export class PaperService {
   private loadProject(projectJSON) {
     this.canvas.project.importJSON(projectJSON);
   }
-
-
 }

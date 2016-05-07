@@ -64,7 +64,8 @@ io.on('connection', (socket) => {
       game.newWord();
       game.isPlaying = true;
       io.emit('game:start');
-      io.to(drawerId).emit('game:drawer', game.answer);
+      io.to(drawerId).emit('game:answer', game.answer);
+      io.to(drawerId).emit('drawing:drawer');
     }
     if(game.isPlaying) {
       socket.emit('game:start');
