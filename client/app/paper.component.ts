@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, OnChanges, OnDestroy } from '@angular/core';
-import { SocketService } from "./socket.service";
 import { PaperService } from './paper.service';
 
 @Component({
@@ -17,32 +16,28 @@ import { PaperService } from './paper.service';
 })
 export class PaperComponent implements OnInit, OnChanges, OnDestroy {
 
-  public socket;
-  @Input() public isDrawer: boolean;
+  @Input() isDrawer: boolean;
+  constructor( private paperService: PaperService) { }
 
-  constructor(private _socketService: SocketService,
-              private _paperService: PaperService) {
-    this.socket = _socketService.socket;
+  ngOnInit() {
+    this.paperService.initPaper('paper');
+    this.paperService.subscribeEvent();
   }
 
-  public ngOnInit() {
-    this._paperService.initPaper('paper');
-    this._paperService.subscribeEvent();
-  }
-
-  public ngOnChanges() {
+  ngOnChanges() {
     console.log('on changes', this.isDrawer);
     // If is drawer, enable canvas and emit drawing events.
     if (this.isDrawer) {
-      this._paperService.enableDrawing();
+      this.paperService.enableDrawing();
     }
   }
 
-  public ngOnDestroy() {
-    // this._paperService.clearProject();
+  ngOnDestroy() {
+    this.paperService.disableDrawing();
   }
 
-  public clearPaper() {
-    this._paperService.clearProject();
+  clearPaper() {
+    this.paperService.enableDrawing();
+    this.paperService.clearProject();
   }
 }
