@@ -11,9 +11,7 @@ import { ChatComponent } from './chat.component';
   directives: [PaperComponent, ChatComponent]
 })
 export class GameComponent {
-  @Input()
-  public word: string;
-  @Input()
-  public isDrawer: boolean;
+  @Input() public word: string;
+  @Input() public isDrawer: boolean;
 
 }

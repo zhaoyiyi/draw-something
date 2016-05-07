@@ -28,8 +28,7 @@ export class LobbyComponent implements OnInit {
   public username: string;
   public isReady: boolean;
   public socket;
-  @Input()
-  public winner: Object;
+  @Input() public winner: Object;
 
   constructor(private _socketService: SocketService,
               private _playerService: PlayerService) {
