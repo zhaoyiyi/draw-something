@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
 
 import { SocketService } from "./socket.service";
-import { Subscriber } from "rxjs/Subscriber";
 
 @Injectable()
 export class ChatService {

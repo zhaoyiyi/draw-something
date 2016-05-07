@@ -1,6 +1,5 @@
 "use strict";
 let express = require('express');
-var R = require('ramda');
 let app = express();
 let server = require('http').createServer(app);
 let io = require('socket.io')(server);
@@ -60,7 +59,7 @@ io.on('connection', (socket) => {
     user.isReady = true;
     
     if (users.allReady() && !game.isPlaying) {
-      let drawerId = users.pickDrawer();
+      let drawerId = users.nextDrawer().id;
       game.newWord();
       game.isPlaying = true;
       io.emit('game:start', users.find(drawerId).name);

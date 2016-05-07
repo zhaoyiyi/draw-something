@@ -4,6 +4,7 @@ let User = require('./user');
 
 let Users = function() {
   this.users = {};
+  this.drawerIndex = 0;
 };
 Users.prototype.addUser = function (socketId) {
   this.users[socketId] = new User(socketId);
@@ -14,10 +15,13 @@ Users.prototype.removeUser = function (socketId) {
 Users.prototype.find = function (socketId) {
   return this.users[socketId];
 };
-Users.prototype.pickDrawer = function () {
-  let userArray = this.getUserList();
-  let randomIndex = Math.floor(Math.random() * userArray.length);
-  return userArray[randomIndex].id;
+
+Users.prototype.nextDrawer = function () {
+  let list = this.getUserList();
+  let drawer = list[this.drawerIndex];
+  this.drawerIndex += 1;
+  if (this.drawerIndex === list.length) this.drawerIndex = 0;
+  return drawer;
 };
 Users.prototype.getUserList = function () {
   return R.values(this.users);
