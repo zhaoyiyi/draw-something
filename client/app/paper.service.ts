@@ -82,6 +82,6 @@ export class PaperService {
   };
 
   private loadProject(projectJSON) {
-    paper.importJSON(projectJSON);
+    paper.project.importJSON(projectJSON);
   }
 }

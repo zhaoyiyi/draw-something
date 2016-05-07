@@ -63,15 +63,15 @@ io.on('connection', (socket) => {
       let drawerId = users.pickDrawer();
       game.newWord();
       game.isPlaying = true;
-      io.emit('game:start');
+      io.emit('game:start', users.find(drawerId).name);
       io.to(drawerId).emit('game:answer', game.answer);
       io.to(drawerId).emit('drawing:drawer');
     }
     // if(game.isPlaying) {
     //   socket.emit('game:start');
-    //   io.emit('drawing:load', canvas.exportJSON());
+    //   socket.emit('drawing:load', canvas.exportJSON());
     // }
-    //
+
   });
 
   socket.on('game:setUsername', (name) => {

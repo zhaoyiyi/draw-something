@@ -23,18 +23,18 @@ import { SocketService } from "./socket.service";
 })
 export class ChatComponent implements OnInit {
   @Input() public isDrawer: boolean;
-  public messages: Array<any> = [];
-  public msg: string;
+  messages: Array<any> = [];
+  msg: string;
 
   constructor(private chatService: ChatService) { }
 
-  public ngOnInit() {
+  ngOnInit() {
     this.chatService.onNewMessage()
         .subscribe( (msg) => this.messages.push(msg) );
   }
 
-  public sendMessage(value) {
-    // rest msg input box
+  sendMessage(value) {
+    // reset msg input box
     this.msg = '';
     this.messages.push({ user: '_self', message: value });
     this.chatService.sendMessage(value);

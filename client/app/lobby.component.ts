@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SocketService } from "./socket.service";
-import { PlayerService } from "./player.service";
+import { GameService } from "./game.service.ts";
 @Component({
   selector: 'lobby',
   template: `
@@ -27,28 +27,22 @@ export class LobbyComponent implements OnInit {
   public userList: Array<any>;
   public username: string;
   public isReady: boolean;
-  public socket;
   @Input() public winner: Object;
 
-  constructor(private _socketService: SocketService,
-              private _playerService: PlayerService) {
-    this.socket = _socketService.socket;
-  }
+  constructor(private playerService: GameService) { }
 
   public ngOnInit() {
-    this.socket.emit('game:userList');
-    this.socket.on('game:userList', (userList) => {
-      this.userList = userList;
-    });
-    this.username = this._playerService.name;
+    this.playerService.getPlayerList()
+        .subscribe(userList => this.userList = userList);
+    this.username = this.playerService.name;
   }
 
   public setUsername(name) {
-    this.username = this._playerService.setUsername(name);
+    this.username = this.playerService.setUsername(name);
   }
 
   public ready() {
-    this._playerService.ready();
+    this.playerService.ready();
     this.isReady = true;
   }
 }

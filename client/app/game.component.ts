@@ -4,14 +4,19 @@ import { ChatComponent } from './chat.component';
 @Component({
   selector: 'game',
   template: `
-    <p>{{word}}</p>
+    <p *ngIf="word">Please draw {{word}}</p>
+    <p *ngIf="!word">{{drawer}} is drawing</p>
     <paper> </paper>
     <chat [isDrawer]="isDrawer"> </chat>
   `,
   directives: [PaperComponent, ChatComponent]
 })
-export class GameComponent {
-  @Input() public word: string;
-  @Input() public isDrawer: boolean;
+export class GameComponent implements OnChanges {
+  @Input() word: string;
+  @Input() drawer: string;
+  isDrawer: boolean;
 
+  ngOnChanges() {
+    this.isDrawer = this.word ? true : false;
+  }
 }

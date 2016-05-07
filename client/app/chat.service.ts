@@ -17,8 +17,6 @@ export class ChatService {
   }
 
   onNewMessage() {
-    return Observable.create( (subscriber: Subscriber) => {
-      this.socket.on('chat:newMessage', (msg) => subscriber.next(msg));
-    });
+    return this.socketService.toObservable('chat:newMessage');
   }
 }

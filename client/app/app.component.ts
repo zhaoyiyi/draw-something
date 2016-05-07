@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GameComponent } from './game.component';
 import { LobbyComponent } from './lobby.component';
 import { SocketService } from "./socket.service";
-import { PlayerService } from './player.service';
+import { GameService } from './game.service.ts';
 @Component({
   selector: 'app',
   template: `
@@ -11,43 +11,35 @@ import { PlayerService } from './player.service';
     </div>
     
     <div *ngIf="isPlaying">
-      <game [isDrawer]="isDrawer" [word]="word"> </game>
+      <game [drawer]="drawer" [word]="word"> </game>
     </div>
   `,
   directives: [GameComponent, LobbyComponent],
-  providers: [PlayerService]
+  providers: [GameService]
 })
 export class AppComponent implements OnInit {
-  public socket;
-  public word: string;
-  public isDrawer: boolean =  false;
-  public isPlaying: boolean;
-  public winner: Object;
+  word: string;
+  drawer: string;
+  isPlaying: boolean;
+  winner: Object;
 
-  constructor(private _socketService: SocketService,
-              private _playerService: PlayerService) {
-    this.socket = _socketService.socket;
-  }
+  constructor(private gameService: GameService) { }
 
   public ngOnInit() {
-    this.socket.on('game:start', () => {
-      console.log('game start');
+    this.gameService.onGameStart().subscribe( (drawer) => {
+      this.drawer = drawer;
       this.isPlaying = true;
     });
 
-    this.socket.on('game:answer', (word) => {
-      console.log('game answer', word);
+    this.gameService.onReceiveAnswer().subscribe( (word) => {
       this.word = word;
-      this.isDrawer = true;
     });
 
-    this.socket.on('game:end', (winner) => {
-      console.log('game end');
-      console.log(winner);
+    this.gameService.onGameEnd().subscribe( (winner) => {
       this.winner = winner;
       this.isPlaying = false;
-      this.isDrawer = false;
       this.word = '';
     });
+
   }
 }
