@@ -15,7 +15,6 @@ Users.prototype.removeUser = function (socketId) {
 Users.prototype.find = function (socketId) {
   return this.users[socketId];
 };
-
 Users.prototype.nextDrawer = function () {
   let list = this.getUserList();
   let drawer = list[this.drawerIndex];

@@ -57,7 +57,13 @@ io.on('connection', (socket) => {
   // Game
   socket.on('game:ready', () => {
     user.isReady = true;
-    
+
+    if(game.isPlaying) {
+      let currentDrawer = users.getUserList()[users.drawerIndex - 1].name;
+      socket.emit('game:start', currentDrawer);
+      socket.emit('drawing:load', canvas.exportJSON());
+    }
+
     if (users.allReady() && !game.isPlaying) {
       let drawerId = users.nextDrawer().id;
       game.newWord();
@@ -66,10 +72,7 @@ io.on('connection', (socket) => {
       io.to(drawerId).emit('game:answer', game.answer);
       io.to(drawerId).emit('drawing:drawer');
     }
-    // if(game.isPlaying) {
-    //   socket.emit('game:start');
-    //   socket.emit('drawing:load', canvas.exportJSON());
-    // }
+
 
   });
 
