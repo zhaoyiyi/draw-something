@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { Observable, Subscriber } from "rxjs/Rx";
 
-const SERVER_URL = 'http://localhost:3000';
+import { SERVER_URL } from './config';
 
 @Injectable()
 export class SocketService {
@@ -13,8 +13,8 @@ export class SocketService {
   }
 
   toObservable(eventName: string): Observable {
-    return Observable.create( (subscriber: Subscriber) => {
+    return Observable.create((subscriber: Subscriber) => {
       this.socket.on(eventName, (data) => subscriber.next(data));
-  });
-}
+    });
+  }
 }

@@ -7,5 +7,4 @@ let User = function(id) {
   this.score = 0;
 };
 
-
-module.exports = User;
+export default User;

@@ -1,12 +1,14 @@
-"use strict";
-let express = require('express');
-let app = express();
-let server = require('http').createServer(app);
-let io = require('socket.io')(server);
+import express from 'express';
+import http from 'http';
+import socketio from 'socket.io';
 
-let Users = require('./server/users');
-let Game = require('./server/game');
-let Canvas = require('./server/canvas');
+import { Users, Game, Canvas } from './server/index';
+
+
+let app = express();
+let server = http.createServer(app);
+let io = socketio(server);
+
 
 const PORT = process.env.PORT || 3000;
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
@@ -48,9 +50,9 @@ io.on('connection', (socket) => {
       game.isPlaying = false;
       users.unReadyAll();
       canvas.clear();
-      io.emit('game:end', {name: user.name, message: msg});
+      io.emit('game:end', { name: user.name, message: msg });
     } else {
-      socket.broadcast.emit('chat:newMessage', {user: user.name, message: msg});
+      socket.broadcast.emit('chat:newMessage', { user: user.name, message: msg });
     }
   });
 
@@ -58,7 +60,7 @@ io.on('connection', (socket) => {
   socket.on('game:ready', () => {
     user.isReady = true;
 
-    if(game.isPlaying) {
+    if (game.isPlaying) {
       let currentDrawer = users.getUserList()[users.drawerIndex - 1].name;
       socket.emit('game:start', currentDrawer);
       socket.emit('drawing:load', canvas.exportJSON());

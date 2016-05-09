@@ -1,23 +1,26 @@
 'use strict';
-let paper = require('paper');
+import paper from 'paper';
 
-let Canvas = function() {
-  this.canvas = paper.setup(new paper.Canvas(500, 500));
-};
+export default class Canvas {
 
-Canvas.prototype.clear = function () {
-  this.canvas.project.clear();
-};
-Canvas.prototype.mouseDown = function (x, y) {
-  this.path = new this.canvas.Path();
-  this.path.add(new this.canvas.Point(x, y));
-  this.path.strokeColor = 'black';
-};
-Canvas.prototype.mouseDrag = function (x, y) {
-  this.path.add(new this.canvas.Point(x, y));
-};
-Canvas.prototype.exportJSON = function () {
-  return this.canvas.project.exportJSON();
-};
+  constructor() {
+    this.canvas = paper.setup(new paper.Canvas(500, 500));
+    this.path = {};
+  }
 
-module.exports = Canvas;
+  clear() {
+    this.canvas.project.clear();
+  }
+  mouseDown(x, y) {
+    this.path = new this.canvas.Path();
+    this.path.add(new this.canvas.Point(x, y));
+    this.path.strokeColor = 'black';
+  }
+  mouseDrag(x, y) {
+    this.path.add(new this.canvas.Point(x, y));
+  }
+  exportJSON() {
+    return this.canvas.project.exportJSON();
+  }
+}
+
