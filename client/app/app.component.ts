@@ -6,13 +6,14 @@ import { GameService } from './game.service.ts';
 @Component({
   selector: 'app',
   template: `
-    <div *ngIf="!isPlaying">
+   <div class="ui container">
+     <div *ngIf="!isPlaying">
       <lobby [winner]="winner"> </lobby>
-    </div>
-    
-    <div *ngIf="isPlaying">
+     </div>
+     <div *ngIf="isPlaying">
       <game [drawer]="drawer" [word]="word"> </game>
-    </div>
+     </div>
+   </div>
   `,
   directives: [GameComponent, LobbyComponent],
   providers: [GameService]

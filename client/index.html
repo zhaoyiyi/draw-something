@@ -15,6 +15,11 @@
   <!-- systemjs -->
   <script src="/node_modules/systemjs/dist/system.src.js"></script>
 
+  <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+
+  <!--  semantic ui -->
+  <script src="/node_modules/semantic-ui-css/semantic.min.js"></script>
+  <link rel="stylesheet" href="/node_modules/semantic-ui-css/semantic.min.css">
   <!-- 2. Configure SystemJS -->
   <script>
     System.config({
@@ -64,6 +69,12 @@
     System.import('app/main')
         .then(null, console.error.bind(console));
   </script>
+
+  <style>
+    body {
+      font-size: 18px;
+    }
+  </style>
 </head>
 <!-- 3. Display the application -->
 <body>

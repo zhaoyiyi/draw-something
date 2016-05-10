@@ -4,22 +4,44 @@ import { GameService } from "./game.service.ts";
 @Component({
   selector: 'lobby',
   template: `
-    <div *ngIf="!username">
-      <form action="" #nameForm="ngForm" (ngSubmit)="setUsername(nameForm.value.username)">
-        <input type="text" placeholder="username" ngControl="username" required>
-        <button type="submit" [disabled]="!nameForm.valid">set</button>
-      </form>
-    </div>
-    <div *ngIf="winner">
-      <p>Winner is {{winner.name}}</p>
-      <p>Answer is {{winner.message}}</p>
-    </div>
-    <button (click)="ready()" [disabled]="isReady">I'm Ready</button>
-    <div *ngIf="userList">
-      <h2>Current Users</h2>
-      <ul>
-        <li *ngFor="let user of userList">{{user.name}}</li>
-      </ul>
+    <div class="ui text container">
+      <div class="ui segments">
+      
+        <div *ngIf="!username" class="ui center aligned segment">
+          <form action="" class=""
+            #nameForm="ngForm" (ngSubmit)="setUsername(nameForm.value.username)">
+            <div class="ui action input">
+              <input type="text" placeholder="username" ngControl="username" required>
+              <button class="ui button" type="submit" [disabled]="!nameForm.valid">set</button>
+            </div>
+          </form>
+        </div>
+        
+        <div *ngIf="winner" class="ui center aligned segment">
+          <p>Winner is {{winner.name}}</p>
+          <p>Answer is {{winner.message}}</p>
+        </div>
+        
+        <div class="ui center aligned segment">
+          <button class="ui teal button"
+            *ngIf="username" (click)="ready()" [disabled]="isReady">I'm Ready</button>
+        </div>
+        
+        <div class="ui center aligned segment">
+          <div *ngIf="userList" class="ui relaxed list">
+            <h2>Current Users</h2>
+            <div class="item" *ngFor="let user of userList">
+              <div class="content">
+                <p class="header">{{user.name}}</p>
+                <div *ngIf="user.name" class="description">
+                  Score: {{user.score}} Ready: {{user.isReady}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
     </div>
   `
 })

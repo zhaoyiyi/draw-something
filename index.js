@@ -59,6 +59,7 @@ io.on('connection', (socket) => {
   // Game
   socket.on('game:ready', () => {
     user.isReady = true;
+    io.emit('game:userList', users.getUserList());
 
     if (game.isPlaying) {
       let currentDrawer = users.getUserList()[users.drawerIndex - 1].name;
