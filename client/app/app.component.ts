@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GameComponent } from './game.component';
-import { LobbyComponent } from './lobby.component';
-import { SocketService } from "./socket.service";
+import { LobbyComponent } from './lobby/lobby.component';
 import { GameService } from './game.service.ts';
 @Component({
   selector: 'app',
@@ -24,19 +23,20 @@ export class AppComponent implements OnInit {
   isPlaying: boolean;
   winner: Object;
 
-  constructor(private gameService: GameService) { }
+  constructor(private gameService: GameService) {
+  }
 
   public ngOnInit() {
-    this.gameService.onGameStart().subscribe( (drawer) => {
+    this.gameService.onGameStart().subscribe((drawer) => {
       this.drawer = drawer;
       this.isPlaying = true;
     });
 
-    this.gameService.onReceiveAnswer().subscribe( (word) => {
+    this.gameService.onReceiveAnswer().subscribe((word) => {
       this.word = word;
     });
 
-    this.gameService.onGameEnd().subscribe( (winner) => {
+    this.gameService.onGameEnd().subscribe((winner) => {
       this.winner = winner;
       this.isPlaying = false;
       this.word = '';

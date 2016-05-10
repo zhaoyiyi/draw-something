@@ -22,12 +22,12 @@ import { GameService } from "./game.service.ts";
           <p>Answer is {{winner.message}}</p>
         </div>
         
-        <div class="ui center aligned segment">
+        <div *ngIf="username" class="ui center aligned segment">
           <button class="ui teal button"
-            *ngIf="username" (click)="ready()" [disabled]="isReady">I'm Ready</button>
+             (click)="ready()" [disabled]="isReady">I'm Ready</button>
         </div>
         
-        <div class="ui center aligned segment">
+        <div class="ui center aligned teal segment">
           <div *ngIf="userList" class="ui relaxed list">
             <h2>Current Users</h2>
             <div class="item" *ngFor="let user of userList">
