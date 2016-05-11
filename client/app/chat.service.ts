@@ -17,4 +17,6 @@ export class ChatService {
   onNewMessage() {
     return this.socketService.toObservable('chat:newMessage');
   }
+  
+  
 }

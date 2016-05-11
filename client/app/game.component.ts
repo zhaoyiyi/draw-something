@@ -4,10 +4,18 @@ import { ChatComponent } from './chat.component';
 @Component({
   selector: 'game',
   template: `
-    <p *ngIf="word">Please draw {{word}}</p>
-    <p *ngIf="!word">{{drawer}} is drawing</p>
-    <paper> </paper>
-    <chat [isDrawer]="isDrawer"> </chat>
+    <div class="ui text container">
+      <div class="ui center aligned raised teal segment">
+        <p *ngIf="word">Please draw {{word}}</p>
+        <p *ngIf="!word">{{drawer}} is drawing</p>
+      </div>
+    </div>
+    <div class="ui center aligned container segment">
+        <paper> </paper>
+    </div>
+    <div class="ui text container segment">
+      <chat [isDrawer]="isDrawer"> </chat>
+    </div>
   `,
   directives: [PaperComponent, ChatComponent]
 })

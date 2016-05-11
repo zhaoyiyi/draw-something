@@ -4,6 +4,7 @@ export default class Game {
 
   constructor() {
     this.answer = '';
+    this.drawer = {};
     this._wordList = ['apple', 'elephant', 'cup', 'computer', 'house'];
     this._wordsGen = this._nextWord(this._wordList);
   }

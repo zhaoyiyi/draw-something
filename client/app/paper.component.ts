@@ -10,7 +10,7 @@ import { PaperService } from './paper.service';
     </div>
     <canvas 
       id="paper"
-      style="height: 500px; width: 500px; border: 1px solid red">
+      style="height: 500px; width: 900px; border: 1px solid red">
     </canvas>
   `,
   providers: [PaperService]

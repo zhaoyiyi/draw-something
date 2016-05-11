@@ -62,13 +62,14 @@ io.on('connection', (socket) => {
     io.emit('game:userList', users.getUserList());
 
     if (game.isPlaying) {
-      let currentDrawer = users.getUserList()[users.drawerIndex - 1].name;
+      let currentDrawer = game.drawer.name;
       socket.emit('game:start', currentDrawer);
       socket.emit('drawing:load', canvas.exportJSON());
     }
 
     if (users.allReady() && !game.isPlaying) {
-      let drawerId = users.nextDrawer().id;
+      game.drawer = users.nextDrawer();
+      let drawerId = game.drawer.id;
       game.newWord();
       game.isPlaying = true;
       io.emit('game:start', users.find(drawerId).name);
