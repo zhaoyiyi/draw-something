@@ -10,7 +10,7 @@ let server = http.createServer(app);
 let io = socketio(server);
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 app.use('/app', express.static(__dirname + '/client/app'));
 app.use('/images', express.static(__dirname + '/client/images'));
