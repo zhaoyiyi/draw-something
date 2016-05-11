@@ -40,7 +40,7 @@ export class LobbyComponent implements OnInit {
   ngOnInit() {
     this.gameService.getPlayerList()
         .subscribe(players => this.players = players);
-    this.username = this.gameService.name;
+    this.username = this.gameService.player ? this.gameService.player.name : '';
   }
   
   setUsername(name) {
