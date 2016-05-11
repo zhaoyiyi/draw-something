@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit() {
+
     this.gameService.onGameStart().subscribe((drawer) => {
       this.drawer = drawer;
       this.isPlaying = true;

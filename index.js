@@ -51,13 +51,15 @@ io.on('connection', (socket) => {
       game.isPlaying = false;
       users.unReadyAll();
       canvas.clear();
-      io.emit('game:end', { name: user.name, message: msg });
+      io.emit('game:end', { user: user, message: msg });
     } else {
-      socket.broadcast.emit('chat:newMessage', { user: user.name, message: msg });
+      socket.broadcast.emit('chat:newMessage', { user: user, message: msg });
     }
   });
 
   // Game
+
+
   socket.on('game:ready', () => {
     user.isReady = true;
     io.emit('game:userList', users.getUserList());
@@ -82,6 +84,7 @@ io.on('connection', (socket) => {
 
   socket.on('game:setUsername', (name) => {
     user.name = name;
+    socket.emit('game:user', user);
     io.emit('game:userList', users.getUserList());
   });
 

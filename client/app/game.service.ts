@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from "./socket.service";
+import { Player } from "./player.model";
 
 @Injectable()
 export class GameService {
-  public name;
+  public player: Player;
   private socket;
 
   constructor(private socketService: SocketService) {
     this.socket = socketService.socket;
+    // server emits player obj after player sets username
+    this.socket.on('game:user', (player: Player) => this.player = player);
   }
 
   getPlayerList() {
@@ -32,9 +35,8 @@ export class GameService {
   }
 
   setUsername(name: string): string {
-    this.name = name;
     this.socket.emit('game:setUsername', name);
-    return this.name;
+    return name;
   }
-  
+
 }
