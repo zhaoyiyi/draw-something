@@ -54,6 +54,7 @@ export class ChatComponent implements OnInit {
     this.msg = '';
     this.messages.push({ user: this.player, message: value });
     this.chatService.sendMessage(value);
+    this.scrollToBottom();
 
   }
 
