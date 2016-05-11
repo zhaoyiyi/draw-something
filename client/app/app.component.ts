@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GameComponent } from './game.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { GameService } from './game.service.ts';
+import { Player } from "./player.model";
 @Component({
   selector: 'app',
   template: `
@@ -19,7 +20,7 @@ import { GameService } from './game.service.ts';
 })
 export class AppComponent implements OnInit {
   word: string;
-  drawer: string;
+  drawer: Player;
   isPlaying: boolean;
   winner: Object;
 

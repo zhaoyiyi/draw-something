@@ -3,4 +3,5 @@ export class Player {
   name: string;
   isReady: boolean;
   score: number;
+  imageId: number;
 }

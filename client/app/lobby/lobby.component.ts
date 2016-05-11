@@ -45,6 +45,7 @@ export class LobbyComponent implements OnInit {
   
   setUsername(name) {
     this.username = this.gameService.setUsername(name);
+    console.log(this.players);
   }
 
   onReady() {

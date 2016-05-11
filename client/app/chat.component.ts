@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, ElementRef } from '@angular/core';
 import { ChatService } from './chat.service';
-import { SocketService } from "./socket.service";
 
 @Component({
   selector: 'chat',

@@ -13,6 +13,7 @@ let io = socketio(server);
 const PORT = process.env.PORT || 3000;
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 app.use('/app', express.static(__dirname + '/client/app'));
+app.use('/images', express.static(__dirname + '/client/images'));
 
 app.get('/*', (req, res) => {
   res.sendFile(__dirname + '/client/index.html');
@@ -62,8 +63,7 @@ io.on('connection', (socket) => {
     io.emit('game:userList', users.getUserList());
 
     if (game.isPlaying) {
-      let currentDrawer = game.drawer.name;
-      socket.emit('game:start', currentDrawer);
+      socket.emit('game:start', game.drawer);
       socket.emit('drawing:load', canvas.exportJSON());
     }
 
@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
       let drawerId = game.drawer.id;
       game.newWord();
       game.isPlaying = true;
-      io.emit('game:start', users.find(drawerId).name);
+      io.emit('game:start', game.drawer);
       io.to(drawerId).emit('game:answer', game.answer);
       io.to(drawerId).emit('drawing:drawer');
     }

@@ -1,13 +1,17 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { PaperComponent } from './paper.component';
 import { ChatComponent } from './chat.component';
+import { Player } from "./player.model";
 @Component({
   selector: 'game',
   template: `
     <div class="ui text container">
       <div class="ui center aligned raised teal segment">
-        <p *ngIf="word">Please draw {{word}}</p>
-        <p *ngIf="!word">{{drawer}} is drawing</p>
+        <p *ngIf="word">Please draw <span class="ui blue header">{{word}}</span></p>
+        <p *ngIf="!word">
+          <img src="/images/{{drawer.imageId}}.jpg" class="ui tiny middle aligned avatar image">
+          {{drawer.name}} is drawing
+        </p>
       </div>
     </div>
     <div class="ui center aligned container segment">
@@ -21,7 +25,7 @@ import { ChatComponent } from './chat.component';
 })
 export class GameComponent implements OnChanges {
   @Input() word: string;
-  @Input() drawer: string;
+  @Input() drawer: Player;
   isDrawer: boolean;
 
   ngOnChanges() {
