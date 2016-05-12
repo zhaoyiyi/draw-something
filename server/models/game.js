@@ -24,22 +24,17 @@ export default class Game {
     this.answer = this._wordsGen.next().value;
   };
 
-  start(io) {
+  start(endCb) {
     this.newWord();
     this.isPlaying = true;
-    this._gameTimeout(io);
+    this._gameTimeout(endCb);
   }
 
-  _gameTimeout(io) {
+  _gameTimeout(endCb) {
     this.timeout = setTimeout( () => {
-      io.emit('game:end', {message: `Answer is ${this.answer}`})
+      endCb();
     }, this._TIME);
-
-    let time = this._TIME / 1000 - 1;
-    this.interval = setInterval( () => {
-      io.emit('game:timeLeft', time);
-      time = time - 1;
-    }, 1000);
+    
   }
 
   *_nextWord(list) {
