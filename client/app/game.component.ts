@@ -12,6 +12,7 @@ import { Player } from "./player.model";
           <img src="/images/{{drawer.imageId}}.jpg" class="ui tiny middle aligned avatar image">
           {{drawer.name}} is drawing
         </p>
+        <p>Time left: {{timeLeft}}</p>
       </div>
     </div>
     <div class="ui center aligned container segment">
@@ -26,6 +27,7 @@ import { Player } from "./player.model";
 export class GameComponent implements OnChanges {
   @Input() word: string;
   @Input() drawer: Player;
+  @Input() timeLeft: number;
   isDrawer: boolean;
 
   ngOnChanges() {

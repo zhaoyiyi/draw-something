@@ -11,7 +11,7 @@ import { Player } from "./player.model";
       <lobby [winner]="winner"> </lobby>
      </div>
      <div *ngIf="isPlaying">
-      <game [drawer]="drawer" [word]="word"> </game>
+      <game [drawer]="drawer" [word]="word" [timeLeft]="timeLeft"> </game>
      </div>
    </div>
   `,
@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   drawer: Player;
   isPlaying: boolean;
   winner: Object;
+  timeLeft: number;
 
   constructor(private gameService: GameService) {
   }
@@ -43,6 +44,8 @@ export class AppComponent implements OnInit {
       this.isPlaying = false;
       this.word = '';
     });
+
+    this.gameService.timeLeft().subscribe((time: number) => this.timeLeft = time);
 
   }
 }

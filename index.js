@@ -48,9 +48,9 @@ io.on('connection', (socket) => {
   socket.on('chat:newMessage', (msg) => {
     if (game.match(msg)) {
       user.score += 1;
-      game.isPlaying = false;
       users.unReadyAll();
       canvas.clear();
+      game.end();
       io.emit('game:end', { user: user, message: `Answer is ${msg}` });
     } else {
       socket.broadcast.emit('chat:newMessage', { user: user, message: msg });
@@ -80,8 +80,7 @@ io.on('connection', (socket) => {
     if (users.allReady() && !game.isPlaying && users.getUserList().length > 1) {
       game.drawer = users.nextDrawer();
       let drawerId = game.drawer.id;
-      game.newWord();
-      game.isPlaying = true;
+      game.start(io);
       io.emit('game:start', game.drawer);
       io.to(drawerId).emit('game:answer', game.answer);
       io.to(drawerId).emit('drawing:drawer');

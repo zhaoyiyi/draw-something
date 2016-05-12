@@ -43,4 +43,8 @@ export class GameService {
     return name;
   }
 
+  timeLeft() {
+    return this.socketService.toObservable('game:timeLeft');
+  }
+
 }
