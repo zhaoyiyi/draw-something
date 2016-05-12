@@ -1,6 +1,6 @@
 'use strict';
 
-export default class Game {
+export class Game {
 
   constructor() {
     this.answer = '';
@@ -46,3 +46,12 @@ export default class Game {
     }
   };
 }
+
+let game;
+
+export let GameInstance = (function () {
+  return function () {
+    if (!game) game = new Game();
+    return game;
+  }
+})();

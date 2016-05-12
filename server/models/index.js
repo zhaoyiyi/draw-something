@@ -1,9 +1,12 @@
-import Game from './game';
-import Users from './users';
-import Canvas from './canvas';
+import { Game, GameInstance } from './game';
+import { Users, UsersInstance } from './users';
+import { Canvas, CanvasInstance } from './canvas';
 
 export {
-  Game,
-  Users,
-  Canvas
+    Game,
+    GameInstance,
+    Users,
+    UsersInstance,
+    Canvas,
+    CanvasInstance
 }

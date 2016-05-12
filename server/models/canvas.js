@@ -1,7 +1,7 @@
 'use strict';
 import paper from 'paper';
 
-export default class Canvas {
+export class Canvas {
 
   constructor() {
     this.canvas = paper.setup(new paper.Canvas(500, 500));
@@ -23,4 +23,13 @@ export default class Canvas {
     return this.canvas.project.exportJSON();
   }
 }
+
+let canvas;
+
+export let CanvasInstance = (function () {
+  return function () {
+    if (!canvas) canvas = new Canvas();
+    return canvas;
+  }
+})();
 

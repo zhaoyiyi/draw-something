@@ -1,7 +1,7 @@
 import express from 'express';
 import http from 'http';
 
-import { Users, Game, Canvas } from './server/models';
+import { Users, Game, Canvas } from './server/models/';
 import { DrawingController } from './server/controllers';
 import { initIo } from './server/socket-io';
 
@@ -26,11 +26,10 @@ let game = new Game();
 let canvas = new Canvas();
 
 io.on('connection', (socket) => {
-  let drawingController = new DrawingController();
-  drawingController.setIo(io, socket);
+  let drawingController = new DrawingController(io, socket);
   drawingController.subscribeAll();
 
-  
+
   users.addUser(socket.id);
   let user = users.find(socket.id);
 
@@ -51,7 +50,7 @@ io.on('connection', (socket) => {
 
     if (game.isPlaying) {
       socket.emit('game:start', game.drawer);
-      socket.emit('drawing:load', canvas.exportJSON());
+      drawingController.load();
     }
 
     if (users.allReady() && !game.isPlaying && users.getUserList().length < 1) {
@@ -69,7 +68,7 @@ io.on('connection', (socket) => {
       countDown();
       io.emit('game:start', game.drawer);
       io.to(drawerId).emit('game:answer', game.answer);
-      io.to(drawerId).emit('drawing:drawer');
+      drawingController.notifyDrawer(drawerId);
     }
   });
 

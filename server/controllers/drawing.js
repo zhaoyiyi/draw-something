@@ -1,15 +1,20 @@
-import { Canvas } from '../models';
+import { CanvasInstance } from '../models';
 
 class DrawingController {
-  constructor() {
-    this.canvas = new Canvas();
-  }
-
-  setIo(io, socket) {
+  constructor(io, socket) {
+    this.canvas = CanvasInstance();
     this.io = io;
     this.socket = socket;
   }
 
+  load() {
+    this.socket.emit('drawing:load', this.canvas.exportJSON());
+  }
+
+  notifyDrawer(drawerId) {
+    this.io.to(drawerId).emit('drawing:drawer');
+  }
+  
   subscribeAll() {
     this.onClear();
     this.onMouseDown();

@@ -2,7 +2,7 @@
 import R from 'ramda';
 import User from './user';
 
-export default class Users {
+export class Users {
 
   constructor() {
     this.users = {};
@@ -44,3 +44,11 @@ export default class Users {
   };
 }
 
+let users;
+
+export let UsersInstance = (function () {
+  return function () {
+    if (!users) users = new Users();
+    return users;
+  }
+})();
