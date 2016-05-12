@@ -15,11 +15,8 @@ import { Player } from "./player.model";
           <div class="description">{{msg.message}}</div>
         </div>
       </div>
-      <!--<p *ngFor="let msg of messages" -->
-        <!--[ngStyle]="{'text-align': msg.user === '_self' ? 'right' : 'left'}">-->
-        <!--<span *ngIf="msg.user !== '_self'">{{msg.user}}: </span> {{msg.message}}-->
-      <!--</p>-->
     </div>
+    
     <div *ngIf="!isDrawer" class="ui right aligned container">
       <form action="" class="ui action input" #chatForm="ngForm" (ngSubmit)="sendMessage(chatForm.value.msg)">
         <input type="text" [(ngModel)]="msg" ngControl="msg" required>

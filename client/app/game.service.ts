@@ -30,6 +30,10 @@ export class GameService {
     return this.socketService.toObservable('game:answer');
   }
 
+  onReceiveStatusMessage() {
+    return this.socketService.toObservable('game:status');
+  }
+
   ready() {
     this.socket.emit('game:ready');
   }

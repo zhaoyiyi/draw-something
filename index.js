@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
       game.isPlaying = false;
       users.unReadyAll();
       canvas.clear();
-      io.emit('game:end', { user: user, message: msg });
+      io.emit('game:end', { user: user, message: `Answer is ${msg}` });
     } else {
       socket.broadcast.emit('chat:newMessage', { user: user, message: msg });
     }
@@ -68,8 +68,16 @@ io.on('connection', (socket) => {
       socket.emit('game:start', game.drawer);
       socket.emit('drawing:load', canvas.exportJSON());
     }
+    
+    if (users.allReady() && !game.isPlaying && users.getUserList().length < 1) {
+      socket.emit('game:status', 'Game will start when there are 2 or more players');
+    }
+    
+    if (!users.allReady() && !game.isPlaying) {
+      io.emit('game:status', 'Waiting for everyone to get ready');
+    }
 
-    if (users.allReady() && !game.isPlaying) {
+    if (users.allReady() && !game.isPlaying && users.getUserList().length > 1) {
       game.drawer = users.nextDrawer();
       let drawerId = game.drawer.id;
       game.newWord();
@@ -78,8 +86,6 @@ io.on('connection', (socket) => {
       io.to(drawerId).emit('game:answer', game.answer);
       io.to(drawerId).emit('drawing:drawer');
     }
-
-
   });
 
   socket.on('game:setUsername', (name) => {
@@ -98,6 +104,10 @@ io.on('connection', (socket) => {
     if (users.getUserList().length === 0) {
       game.isPlaying = false;
       canvas.clear();
+    }
+
+    if (game.drawer === user) {
+      io.emit('game:end', {message: 'Drawer has left the game'})
     }
     io.emit('project:userChange', users.getUserList());
   });

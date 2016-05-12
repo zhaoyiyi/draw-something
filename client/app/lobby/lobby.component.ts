@@ -19,6 +19,7 @@ import { Player } from "../player.model";
         
         <div *ngIf="username" class="ui center aligned segment">
           <ready-button (ready)="onReady()"></ready-button>
+          <p>{{gameMessage}}</p>
         </div>
         
         <div *ngIf="players" class="ui center aligned teal segment">
@@ -33,6 +34,7 @@ import { Player } from "../player.model";
 export class LobbyComponent implements OnInit {
   @Input() winner;
   username: string;
+  gameMessage: string;
   players: Player[];
 
   constructor(private gameService: GameService) { }
@@ -40,7 +42,11 @@ export class LobbyComponent implements OnInit {
   ngOnInit() {
     this.gameService.getPlayerList()
         .subscribe(players => this.players = players);
+    
     this.username = this.gameService.player ? this.gameService.player.name : '';
+    
+    this.gameService.onReceiveStatusMessage()
+        .subscribe( (message: string) => this.gameMessage = message);
   }
   
   setUsername(name) {
