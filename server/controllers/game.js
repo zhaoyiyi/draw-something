@@ -1,6 +1,6 @@
 import { UsersInstance, GameInstance } from '../models';
 
-export default class GameController {
+export default class Game {
   constructor(io, socket) {
     this.users = UsersInstance();
     this.game = GameInstance();
@@ -8,48 +8,88 @@ export default class GameController {
     this.socket = socket;
   }
 
+  canStart() {
+    return (this.users.allReady()
+    && !this.game.isPlaying
+    && this.users.getUserList().length > 1);
+  }
+
   countDown() {
     let time = this.game._TIME / 1000 - 1;
     this.game.interval = setInterval(() => {
-      io.emit('game:timeLeft', time);
+      this.io.emit('game:timeLeft', time);
       time = time - 1;
     }, 1000);
   }
 
-  onNewUser() {
-    this.users.addUser(this.socket.id);
-    this.user = this.users.find(this.socket.id);
-  }
-  
-  onReady() {
-    
+  checkReadyStatus() {
+    if (this.users.allReady() && !this.isPlaying() && this.users.getUserList().length < 1) {
+      this.socket.emit('game:status', 'Game will start when there are 2 or more players');
+    }
+
+    if (!this.users.allReady() && !this.isPlaying()) {
+      this.io.emit('game:status', 'Waiting for everyone to get ready');
+    }
   }
 
-  onSetUsername() {
-    this.socket.on('game:setUsername', (name) => {
-      this.user.name = name;
-      this.socket.emit('game:user', this.user);
-      this.io.emit('game:userList', this.users.getUserList());
-    });
-  }
-
-  onUserList() {
-    this.socket.on('game:userList', () => {
-      this.socket.emit('game:userList', this.users.getUserList());
-    });
+  emitDrawer() {
+    this.socket.emit('game:start', this.game.drawer);
   }
 
   gameStart() {
+    this.game.drawer = this.users.nextDrawer();
+    let drawerId = this.game.drawer.id;
     this.game.start(() => {
       this.countDown();
       this.gameEnd();
     });
+
+    this.io.emit('game:start', this.game.drawer);
+    this.io.to(drawerId).emit('game:answer', this.game.answer);
   }
 
-  gameEnd() {
+  gameEnd(winner) {
     this.users.unReadyAll();
-    // canvas.clear();
     this.game.end();
-    this.io.emit('game:end', { user: user, message: `Answer is ${game.answer}` });
+    this.io.emit('game:end', { user: winner, message: `Answer is ${this.game.answer}` });
+  }
+
+  getDrawerId() {
+    return this.game.drawer.id;
+  }
+
+  isPlaying() {
+    return this.game.isPlaying;
+  }
+
+  newUser() {
+    this.users.addUser(this.socket.id);
+    this.user = this.users.find(this.socket.id);
+  }
+
+  onSetUsername(name) {
+    this.user.name = name;
+    this.socket.emit('game:user', this.user);
+    this.io.emit('game:userList', this.users.getUserList());
+  }
+
+  onUserList() {
+    this.socket.emit('game:userList', this.users.getUserList());
+  }
+
+  ready() {
+    this.user.isReady = true;
+    this.io.emit('game:userList', this.users.getUserList());
+  }
+
+  userQuit() {
+    let user = this.users.find(this.socket.id);
+    if (this.users.getUserList().length === 0) {
+      this.gameEnd();
+    }
+    if (this.game.drawer === user) {
+      this.io.emit('game:end', { message: 'Drawer has left the game' })
+    }
+    this.users.removeUser(this.socket.id);
   }
 }

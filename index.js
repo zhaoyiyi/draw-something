@@ -1,8 +1,7 @@
 import express from 'express';
 import http from 'http';
 
-import { Users, Game, Canvas } from './server/models/';
-import { DrawingController } from './server/controllers';
+import { DrawingController, Game } from './server/controllers';
 import { initIo } from './server/socket-io';
 
 
@@ -21,99 +20,58 @@ app.get('/*', (req, res) => {
 });
 
 
-let users = new Users();
-let game = new Game();
-let canvas = new Canvas();
-
-io.on('connection', (socket) => {
+io.on('connection', function(socket) {
   let drawingController = new DrawingController(io, socket);
-  drawingController.subscribeAll();
+  let game = new Game(io, socket);
 
+  game.newUser();
 
-  users.addUser(socket.id);
-  let user = users.find(socket.id);
+  // Drawing
+  socket.on('drawing:clear', () => drawingController.onClear());
+  socket.on('drawing:mouseDown', (pos) => drawingController.onMouseDown(pos));
+  socket.on('drawing:mouseDrag', (pos) => drawingController.onMouseDrag(pos));
+
+  // Game
+  socket.on('game:setUsername', (name) => game.onSetUsername(name));
+  socket.on('game:userList', () => game.onUserList());
+
 
   // Chat
   socket.on('chat:newMessage', (msg) => {
-    if (game.match(msg)) {
-      user.score += 1;
-      gameEnd();
+    if (game.game.match(msg)) {
+      game.user.score += 1;
+      game.gameEnd(game.user);
     } else {
-      socket.broadcast.emit('chat:newMessage', { user: user, message: msg });
+      socket.broadcast.emit('chat:newMessage', { user: game.user, message: msg });
     }
   });
 
   // Game
   socket.on('game:ready', () => {
-    user.isReady = true;
-    io.emit('game:userList', users.getUserList());
+    
+    game.ready();
 
-    if (game.isPlaying) {
-      socket.emit('game:start', game.drawer);
+    if (game.isPlaying()) {
+      game.emitDrawer();
       drawingController.load();
     }
+    
+    game.checkReadyStatus();
 
-    if (users.allReady() && !game.isPlaying && users.getUserList().length < 1) {
-      socket.emit('game:status', 'Game will start when there are 2 or more players');
-    }
-
-    if (!users.allReady() && !game.isPlaying) {
-      io.emit('game:status', 'Waiting for everyone to get ready');
-    }
-
-    if (users.allReady() && !game.isPlaying && users.getUserList().length > 1) {
-      game.drawer = users.nextDrawer();
-      let drawerId = game.drawer.id;
-      game.start(() => gameEnd());
-      countDown();
-      io.emit('game:start', game.drawer);
-      io.to(drawerId).emit('game:answer', game.answer);
-      drawingController.notifyDrawer(drawerId);
+    if (game.canStart()) {
+      game.gameStart();
+      drawingController.notifyDrawer(game.getDrawerId());
     }
   });
 
-  socket.on('game:setUsername', (name) => {
-    user.name = name;
-    socket.emit('game:user', user);
-    io.emit('game:userList', users.getUserList());
-  });
-
-  socket.on('game:userList', () => {
-    socket.emit('game:userList', users.getUserList());
-  });
 
   // Disconnect
   socket.on('disconnect', () => {
-    users.removeUser(socket.id);
-    if (users.getUserList().length === 0) {
-      game.isPlaying = false;
-      canvas.clear();
-    }
-
-    if (game.drawer === user) {
-      io.emit('game:end', { message: 'Drawer has left the game' })
-    }
-    io.emit('project:userChange', users.getUserList());
+    game.userQuit();
+    // io.emit('project:userChange', users.getUserList());
   });
 });
 
-
-// Functions
-
-function gameEnd() {
-  users.unReadyAll();
-  canvas.clear();
-  game.end();
-  io.emit('game:end', { user: user, message: `Answer is ${game.answer}` });
-}
-
-function countDown() {
-  let time = 30000 / 1000 - 1;
-  game.interval = setInterval(() => {
-    io.emit('game:timeLeft', time);
-    time = time - 1;
-  }, 1000);
-}
 
 server.listen(PORT, () => {
   console.log(`listening to port ${PORT}`);
