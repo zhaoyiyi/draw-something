@@ -14,13 +14,7 @@ export default class Game {
     && this.users.getUserList().length > 1);
   }
 
-  countDown() {
-    let time = this.game._TIME / 1000 - 1;
-    this.game.interval = setInterval(() => {
-      this.io.emit('game:timeLeft', time);
-      time = time - 1;
-    }, 1000);
-  }
+
 
   checkReadyStatus() {
     if (this.users.allReady() && !this.isPlaying() && this.users.getUserList().length < 1) {
@@ -39,8 +33,8 @@ export default class Game {
   gameStart() {
     this.game.drawer = this.users.nextDrawer();
     let drawerId = this.game.drawer.id;
+    this._countDown();
     this.game.start(() => {
-      this.countDown();
       this.gameEnd();
     });
 
@@ -79,6 +73,7 @@ export default class Game {
 
   ready() {
     this.user.isReady = true;
+    this.checkReadyStatus();
     this.io.emit('game:userList', this.users.getUserList());
   }
 
@@ -91,5 +86,15 @@ export default class Game {
       this.io.emit('game:end', { message: 'Drawer has left the game' })
     }
     this.users.removeUser(this.socket.id);
+    this.io.emit('game:userList', this.users.getUserList());
+  }
+
+
+  _countDown() {
+    let time = this.game._TIME / 1000 - 1;
+    this.game.interval = setInterval(() => {
+      this.io.emit('game:timeLeft', time);
+      time = time - 1;
+    }, 1000);
   }
 }

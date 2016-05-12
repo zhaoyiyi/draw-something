@@ -1,6 +1,6 @@
 import { CanvasInstance } from '../models';
 
-class DrawingController {
+class Drawing {
   constructor(io, socket) {
     this.canvas = CanvasInstance();
     this.io = io;
@@ -31,4 +31,4 @@ class DrawingController {
   }
 }
 
-export default DrawingController;
+export default Drawing;

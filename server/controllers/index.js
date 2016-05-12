@@ -1,8 +1,8 @@
-import DrawingController from './drawing';
+import Drawing from './drawing';
 import Game from './game';
 
 
 export {
-    DrawingController,
+    Drawing,
     Game
 };

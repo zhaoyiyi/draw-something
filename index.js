@@ -1,7 +1,7 @@
 import express from 'express';
 import http from 'http';
 
-import { DrawingController, Game } from './server/controllers';
+import { Drawing, Game } from './server/controllers';
 import { initIo } from './server/socket-io';
 
 
@@ -21,7 +21,7 @@ app.get('/*', (req, res) => {
 
 
 io.on('connection', function(socket) {
-  let drawingController = new DrawingController(io, socket);
+  let drawingController = new Drawing(io, socket);
   let game = new Game(io, socket);
 
   game.newUser();
@@ -48,7 +48,7 @@ io.on('connection', function(socket) {
 
   // Game
   socket.on('game:ready', () => {
-    
+
     game.ready();
 
     if (game.isPlaying()) {
@@ -66,10 +66,7 @@ io.on('connection', function(socket) {
 
 
   // Disconnect
-  socket.on('disconnect', () => {
-    game.userQuit();
-    // io.emit('project:userChange', users.getUserList());
-  });
+  socket.on('disconnect', () => game.userQuit());
 });
 
 
