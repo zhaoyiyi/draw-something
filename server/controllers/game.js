@@ -45,6 +45,7 @@ export default class Game {
   gameEnd(winner) {
     this.users.unReadyAll();
     this.game.end();
+    clearInterval(this.game.interval);
     this.io.emit('game:end', { user: winner, message: `Answer is ${this.game.answer}` });
   }
 
