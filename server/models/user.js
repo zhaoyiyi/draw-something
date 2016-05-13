@@ -10,11 +10,15 @@ export default class User {
     this.score = 0;
     this.imageId = this._newImage();
   }
+  deleteUser() {
+    let index = this.usedImage.indexOf(this.imageId);
+    this.usedImage.splice(index, 1);
+  }
 
   _newImage() {
     let id = this._randomImageId();
     if (this.usedImage.indexOf(id) !== -1 &&
-        this.usedImage.length <= this._IMG_NUM) {
+        this.usedImage.length < this._IMG_NUM) {
 
       return this._newImage();
     }

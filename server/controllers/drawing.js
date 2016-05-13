@@ -20,6 +20,12 @@ class Drawing {
     this.socket.broadcast.emit('drawing:clear');
   }
 
+  onBrushChange(brush) {
+    this.canvas.strokeColor = brush.color;
+    this.canvas.strokeWidth = brush.width;
+    this.socket.broadcast.emit('drawing:brushChange', brush);
+  }
+
   onMouseDown(pos) {
     this.canvas.mouseDown(pos[1], pos[2]);
     this.socket.broadcast.emit('drawing:mouseDown', pos);
@@ -29,6 +35,7 @@ class Drawing {
     this.canvas.mouseDrag(pos[1], pos[2]);
     this.socket.broadcast.emit('drawing:mouseDrag', pos);
   }
+
 }
 
 export default Drawing;

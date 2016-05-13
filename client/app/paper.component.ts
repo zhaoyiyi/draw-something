@@ -7,6 +7,8 @@ import { PaperService } from './paper.service';
   template: `
     <div *ngIf="isDrawer">
       <button (click)="clearPaper()">clear</button>
+      <button (click)="useEraser()">eraser</button>
+      <button (click)="pencil()">pencil</button>
     </div>
     <canvas 
       id="paper"
@@ -29,6 +31,7 @@ export class PaperComponent implements OnInit, OnDestroy {
       this.paperService.enableDrawing();
       this.isDrawer = true;
     });
+    this.pencil();
   }
 
   ngOnDestroy() {
@@ -37,5 +40,13 @@ export class PaperComponent implements OnInit, OnDestroy {
 
   clearPaper() {
     this.paperService.clearProject();
+  }
+
+  useEraser() {
+    this.paperService.eraser();
+  }
+
+  pencil() {
+    this.paperService.pencil();
   }
 }

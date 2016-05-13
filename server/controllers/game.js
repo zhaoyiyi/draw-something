@@ -84,7 +84,8 @@ export default class Game {
       this.gameEnd();
     }
     if (this.game.drawer === user) {
-      this.io.emit('game:end', { message: 'Drawer has left the game' })
+      this.io.emit('game:end', { message: 'Drawer has left the game' });
+      this.gameEnd();
     }
     this.users.removeUser(this.socket.id);
     this.io.emit('game:userList', this.users.getUserList());

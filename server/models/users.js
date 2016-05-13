@@ -14,6 +14,7 @@ export class Users {
   };
 
   removeUser(socketId) {
+    this.users[socketId].deleteUser();
     delete this.users[socketId];
   };
 

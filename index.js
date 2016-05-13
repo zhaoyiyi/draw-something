@@ -21,15 +21,16 @@ app.get('/*', (req, res) => {
 
 
 io.on('connection', function(socket) {
-  let drawingController = new Drawing(io, socket);
+  let drawing = new Drawing(io, socket);
   let game = new Game(io, socket);
 
   game.newUser();
 
   // Drawing
-  socket.on('drawing:clear', () => drawingController.onClear());
-  socket.on('drawing:mouseDown', (pos) => drawingController.onMouseDown(pos));
-  socket.on('drawing:mouseDrag', (pos) => drawingController.onMouseDrag(pos));
+  socket.on('drawing:clear', () => drawing.onClear());
+  socket.on('drawing:mouseDown', (pos) => drawing.onMouseDown(pos));
+  socket.on('drawing:mouseDrag', (pos) => drawing.onMouseDrag(pos));
+  socket.on('drawing:brushChange', (brush) => drawing.onBrushChange(brush));
 
   // Game
   socket.on('game:setUsername', (name) => game.onSetUsername(name));
@@ -53,14 +54,14 @@ io.on('connection', function(socket) {
 
     if (game.isPlaying()) {
       game.emitDrawer();
-      drawingController.load();
+      drawing.load();
     }
     
     game.checkReadyStatus();
 
     if (game.canStart()) {
       game.gameStart();
-      drawingController.notifyDrawer(game.getDrawerId());
+      drawing.notifyDrawer(game.getDrawerId());
     }
   });
 
