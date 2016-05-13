@@ -9,7 +9,7 @@ import { Player } from "./player.model";
       <div class="ui center aligned raised teal segment">
         <p *ngIf="word">Please draw <span class="ui blue header">{{word}}</span></p>
         <p *ngIf="!word">
-          <img src="/images/{{drawer.imageId}}.jpg" class="ui tiny middle aligned avatar image">
+          <img src="/images/{{drawer.imageId}}.jpg" class="ui mini middle aligned avatar image">
           {{drawer.name}} is drawing
         </p>
         <p>Time left: {{timeLeft}}</p>
