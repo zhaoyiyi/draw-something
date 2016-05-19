@@ -17,7 +17,7 @@ export default class Game {
 
 
   checkReadyStatus() {
-    if (this.users.allReady() && !this.isPlaying() && this.users.getUserList().length < 1) {
+    if (this.users.allReady() && !this.isPlaying() && this.users.getUserList().length <= 1) {
       this.socket.emit('game:status', 'Game will start when there are 2 or more players');
     }
 
