@@ -26,6 +26,8 @@ export class AppComponent implements OnInit {
   timeLeft: number;
 
   constructor(private gameService: GameService) {
+    // for fun
+    window.useList = (list) => gameService.changeList(list);
   }
 
   public ngOnInit() {

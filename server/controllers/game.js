@@ -7,14 +7,16 @@ export default class Game {
     this.io = io;
     this.socket = socket;
   }
+  
+  useList(list) {
+    this.game.useList = list;
+  }
 
   canStart() {
     return (this.users.allReady()
     && !this.game.isPlaying
     && this.users.getUserList().length > 1);
   }
-
-
 
   checkReadyStatus() {
     if (this.users.allReady() && !this.isPlaying() && this.users.getUserList().length <= 1) {
@@ -93,10 +95,12 @@ export default class Game {
 
 
   _countDown() {
-    let time = this.game._TIME / 1000 - 1;
+    let time = this.game._TIME / 1000;
+    this.io.emit('game:timeLeft', time);
+    
     this.game.interval = setInterval(() => {
-      this.io.emit('game:timeLeft', time);
       time = time - 1;
+      this.io.emit('game:timeLeft', time);
     }, 1000);
   }
 }

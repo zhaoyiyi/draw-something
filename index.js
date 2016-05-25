@@ -20,7 +20,7 @@ app.get('/*', (req, res) => {
 });
 
 
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {
   let drawing = new Drawing(io, socket);
   let game = new Game(io, socket);
 
@@ -35,7 +35,21 @@ io.on('connection', function(socket) {
   // Game
   socket.on('game:setUsername', (name) => game.onSetUsername(name));
   socket.on('game:userList', () => game.onUserList());
+  socket.on('game:useList', (list) => game.useList(list));
+  socket.on('game:ready', () => {
+    game.ready();
+    if (game.isPlaying()) {
+      game.emitDrawer();
+      drawing.load();
+    }
 
+    game.checkReadyStatus();
+
+    if (game.canStart()) {
+      game.gameStart();
+      drawing.notifyDrawer(game.getDrawerId());
+    }
+  });
 
   // Chat
   socket.on('chat:newMessage', (msg) => {
@@ -46,26 +60,7 @@ io.on('connection', function(socket) {
       socket.broadcast.emit('chat:newMessage', { user: game.user, message: msg });
     }
   });
-
-  // Game
-  socket.on('game:ready', () => {
-
-    game.ready();
-
-    if (game.isPlaying()) {
-      game.emitDrawer();
-      drawing.load();
-    }
-    
-    game.checkReadyStatus();
-
-    if (game.canStart()) {
-      game.gameStart();
-      drawing.notifyDrawer(game.getDrawerId());
-    }
-  });
-
-
+  
   // Disconnect
   socket.on('disconnect', () => game.userQuit());
 });

@@ -23,6 +23,7 @@
     "express": "^4.13.4",
     "http2": "^3.3.4",
     "jquery": "^2.2.3",
+    "lodash": "^4.13.1",
     "paper": "^0.9.25",
     "ramda": "^0.21.0",
     "reflect-metadata": "^0.1.2",
