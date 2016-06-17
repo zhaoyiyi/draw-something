@@ -4,6 +4,15 @@
 
 A small game where one person turn a random word to drawing and others guess the word.
 
+###Installation
+
+```
+git clone git@github.com:zhaoyiyi/draw-something.git
+cd draw-something
+npm install
+```
+Type `npm start` to start the server, then go to http://localhost:3001
+
 <img src="https://raw.githubusercontent.com/zhaoyiyi/draw-something/master/screenshots/play.gif">
 <img src="https://raw.githubusercontent.com/zhaoyiyi/draw-something/master/screenshots/ds3.png">
 
