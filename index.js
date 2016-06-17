@@ -24,7 +24,7 @@ io.on('connection', function (socket) {
   let drawing = new Drawing(io, socket);
   let game = new Game(io, socket);
 
-  game.newUser();
+  // game.newUser();
 
   // Drawing
   socket.on('drawing:clear', () => drawing.onClear());
@@ -33,9 +33,13 @@ io.on('connection', function (socket) {
   socket.on('drawing:brushChange', (brush) => drawing.onBrushChange(brush));
 
   // Game
-  socket.on('game:setUsername', (name) => game.onSetUsername(name));
+  socket.on('game:setUsername', (name) => {
+    game.newUser();
+    return game.onSetUsername(name);
+  });
   socket.on('game:userList', () => game.onUserList());
   socket.on('game:useList', (list) => game.useList(list));
+
   socket.on('game:ready', () => {
     game.ready();
     if (game.isPlaying()) {
