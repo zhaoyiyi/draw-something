@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameFormComponent, PlayerListComponent, WinnerComponent, ReadyButtonComponent } from './index';
 import { GameService } from "../game.service";
 import { Player } from "../player.model";
 
@@ -28,8 +27,7 @@ import { Player } from "../player.model";
 
       </div>
     </div>
-  `,
-  directives: [NameFormComponent, PlayerListComponent, WinnerComponent, ReadyButtonComponent]
+  `
 })
 export class LobbyComponent implements OnInit {
   @Input() winner;

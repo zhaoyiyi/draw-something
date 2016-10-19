@@ -21,8 +21,7 @@ import { Player } from "./player.model";
     <div class="ui text container segment">
       <chat [isDrawer]="isDrawer"> </chat>
     </div>
-  `,
-  directives: [PaperComponent, ChatComponent]
+  `
 })
 export class GameComponent implements OnChanges {
   @Input() word: string;

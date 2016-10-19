@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GameComponent } from './game.component';
-import { LobbyComponent } from './lobby/lobby.component';
-import { GameService } from './game.service.ts';
+import { GameService } from './game.service';
 import { Player } from "./player.model";
 @Component({
   selector: 'app',
@@ -15,7 +13,6 @@ import { Player } from "./player.model";
      </div>
    </div>
   `,
-  directives: [GameComponent, LobbyComponent],
   providers: [GameService]
 })
 export class AppComponent implements OnInit {
@@ -27,7 +24,7 @@ export class AppComponent implements OnInit {
 
   constructor(private gameService: GameService) {
     // for fun
-    window.useList = (list) => gameService.changeList(list);
+    // window.useList = (list) => gameService.changeList(list);
   }
 
   public ngOnInit() {

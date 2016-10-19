@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, ElementRef } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ChatService } from './chat.service';
 import { GameService } from "./game.service";
 import { Player } from "./player.model";
@@ -18,7 +19,7 @@ import { Player } from "./player.model";
     
     <div *ngIf="!isDrawer" class="ui right aligned container">
       <form action="" class="ui small action input" #chatForm="ngForm" (ngSubmit)="sendMessage(chatForm.value.msg)">
-        <input type="text" [(ngModel)]="msg" ngControl="msg" required>
+        <input type="text" [(ngModel)]="msg" ngControl="msg" name="msg" required>
         <button type="submit" [disabled]="!chatForm.valid" class="ui teal button">send</button>
       </form>
     </div>
@@ -47,7 +48,7 @@ export class ChatComponent implements OnInit {
     this.player = this.gameService.player;
   }
 
-  sendMessage(value) {
+  sendMessage(value: NgForm) {
 
     // reset msg input box
     this.msg = '';

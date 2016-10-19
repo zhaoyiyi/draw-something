@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'name-form',
   template: `
     <form action="" class=""
-      #nameForm="ngForm" (ngSubmit)="setUsername(nameForm.value.username)">
+      #nameForm="ngForm" (ngSubmit)="setUsername(nameForm)">
       <div class="ui action input">
-        <input type="text" placeholder="username" ngControl="username" required>
+        <input type="text" placeholder="username" name="username" #username="ngModel" required ngModel>
         <button class="ui button" type="submit" [disabled]="!nameForm.valid">set</button>
       </div>
     </form>
@@ -16,8 +17,9 @@ export class NameFormComponent {
 
   @Output() setName = new EventEmitter();
 
-  setUsername(name) {
-    this.setName.emit(name);
+  setUsername(name: NgForm) {
+    this.setName.emit(name.value.username);
+    console.log(name);
   }
 
 }

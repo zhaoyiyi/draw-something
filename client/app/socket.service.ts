@@ -12,8 +12,8 @@ export class SocketService {
     this.socket = io.connect(SERVER_URL);
   }
 
-  toObservable(eventName: string): Observable {
-    return Observable.create((subscriber: Subscriber) => {
+  toObservable(eventName: string): Observable<any> {
+    return Observable.create((subscriber: Subscriber<any>) => {
       this.socket.on(eventName, (data) => subscriber.next(data));
     });
   }

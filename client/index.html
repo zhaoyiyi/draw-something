@@ -9,7 +9,7 @@
   <!-- typescript -->
   <script src="/node_modules/typescript/lib/typescript.js"></script>
   <!-- angular -->
-  <script src="/node_modules/es6-shim/es6-shim.min.js"></script>
+  <script src="/node_modules/core-js/client/shim.min.js"></script>
   <script src="/node_modules/zone.js/dist/zone.js"></script>
   <script src="/node_modules/reflect-metadata/Reflect.js"></script>
   <!-- systemjs -->
@@ -21,52 +21,10 @@
   <script src="/node_modules/semantic-ui-css/semantic.min.js"></script>
   <link rel="stylesheet" href="/node_modules/semantic-ui-css/semantic.min.css">
   <!-- 2. Configure SystemJS -->
+
+  <script src="app/system.config.js"></script>
   <script>
-    System.config({
-      transpiler: "typescript",
-      typescriptOptions: {
-        "module": "system",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
-      },
-      packages: {
-        "app": {
-          main: "main",
-          defaultExtension: 'ts'
-        },
-        '@angular/core': {
-          main: 'index'
-        },
-        '@angular/platform-browser-dynamic': {
-          main: 'index'
-        },
-        '@angular/platform-browser': {
-          main: 'index'
-        },
-        '@angular/common': {
-          main: 'index'
-        },
-        '@angular/compiler': {
-          main: 'index'
-        },
-        '@angular/router-deprecated': {
-          main: 'index'
-        },
-        "rxjs": {
-          defaultExtension: 'js'
-        }
-      },
-      paths: {
-        '@angular/*': '/node_modules/@angular/*',
-        "rxjs/*": "/node_modules/rxjs/*",
-        "reflect-metadata": "/node_modules/reflect-metadata"
-      },
-      map: {
-        "rxjs": "node_modules/rxjs",
-        "socket.io-client": "/node_modules/socket.io-client/socket.io.js"
-      }
-    });
-    System.import('app/main')
+    System.import('app')
         .then(null, console.error.bind(console));
   </script>
 
@@ -78,6 +36,6 @@
 </head>
 <!-- 3. Display the application -->
 <body>
-<app>Loading...</app>
+  <app>Loading...</app>
 </body>
 </html>
