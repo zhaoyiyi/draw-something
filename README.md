@@ -11,6 +11,8 @@ git clone git@github.com:zhaoyiyi/draw-something.git
 cd draw-something
 npm install
 ```
+Rename `config.sample.ts` in client/app folder to `config.ts`
+
 Type `npm start` to start the server, then go to http://localhost:3001
 
 <img src="https://raw.githubusercontent.com/zhaoyiyi/draw-something/master/screenshots/play.gif">
