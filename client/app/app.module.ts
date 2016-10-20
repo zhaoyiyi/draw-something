@@ -7,6 +7,7 @@ import { GameModule } from './game.module';
 import { LobbyModule } from './lobby.module';
 import { GameService } from './game.service';
 import { SocketService } from './socket.service';
+import { ChatService } from "./chat.service";
 
 
 @NgModule({
@@ -17,8 +18,7 @@ import { SocketService } from './socket.service';
     LobbyModule
   ],
   bootstrap: [ AppComponent ],
-  providers: [ GameService, SocketService ],
+  providers: [ GameService, SocketService, ChatService ],
   declarations: [ AppComponent ]
 })
-export class AppModule {
-}
+export class AppModule {}

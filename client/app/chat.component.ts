@@ -25,8 +25,7 @@ import { Player } from "./player.model";
     </div>
     
     
-  `,
-  providers: [ChatService]
+  `
 })
 export class ChatComponent implements OnInit {
   @Input() isDrawer: boolean;

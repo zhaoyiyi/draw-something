@@ -9,6 +9,7 @@ export class PaperService {
   private tool;
   private color;
   private strokeWidth;
+  private path;
 
   constructor(private socketService: SocketService) {
     this.socket = socketService.socket;

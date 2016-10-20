@@ -14,8 +14,7 @@ import { PaperService } from './paper.service';
       id="paper"
       style="height: 500px; width: 900px; border: 1px solid red">
     </canvas>
-  `,
-  providers: [PaperService]
+  `
 })
 export class PaperComponent implements OnInit, OnDestroy {
 

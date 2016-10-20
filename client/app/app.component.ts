@@ -12,8 +12,7 @@ import { Player } from "./player.model";
       <game [drawer]="drawer" [word]="word" [timeLeft]="timeLeft"> </game>
      </div>
    </div>
-  `,
-  providers: [GameService]
+  `
 })
 export class AppComponent implements OnInit {
   word: string;

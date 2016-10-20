@@ -15,5 +15,4 @@ import {
   declarations: [ LobbyComponent, NameFormComponent, PlayerListComponent, WinnerComponent, ReadyButtonComponent ],
   exports: [ LobbyComponent ]
 })
-export class LobbyModule {
-}
+export class LobbyModule {}

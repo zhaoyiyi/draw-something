@@ -1,6 +1,4 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { PaperComponent } from './paper.component';
-import { ChatComponent } from './chat.component';
 import { Player } from "./player.model";
 @Component({
   selector: 'game',
