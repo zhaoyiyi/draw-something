@@ -1,13 +1,13 @@
-import socketio from 'socket.io';
+const socketio = require('socket.io');
 
 let io;
 
-export function initIo(httpServer) {
+exports.initIo = function initIo(httpServer) {
   io = socketio(httpServer);
   return io;
 }
 
-export function getIo() {
+exports.getIo = function getIo() {
   if (!io) throw 'io is not initialized';
 
   return io;

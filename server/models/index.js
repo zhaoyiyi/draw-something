@@ -1,8 +1,8 @@
-import { Game, GameInstance } from './game';
-import { Users, UsersInstance } from './users';
-import { Canvas, CanvasInstance } from './canvas';
+const { Game, GameInstance } = require('./game');
+const { Users, UsersInstance } = require('./users');
+const { Canvas, CanvasInstance } = require('./canvas');
 
-export {
+module.exports = {
     Game,
     GameInstance,
     Users,

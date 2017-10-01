@@ -1,8 +1,8 @@
-import Drawing from './drawing';
-import Game from './game';
+const Drawing = require('./drawing');
+const Game = require('./game');
 
 
-export {
+module.exports = {
     Drawing,
     Game
-};
+}

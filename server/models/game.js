@@ -1,7 +1,7 @@
 'use strict';
-import * as _ from 'lodash';
+const _ = require('lodash');
 
-export class Game {
+class Game {
 
   constructor() {
     this.answer = '';
@@ -69,8 +69,8 @@ export class Game {
 }
 
 let game;
-
-export let GameInstance = (function () {
+exports.Game = Game;
+exports.GameInstance = (function () {
   return function () {
     if (!game) game = new Game();
     return game;

@@ -1,7 +1,7 @@
 'use strict';
-import paper from 'paper';
+const paper = require('paper-jsdom-canvas');
 
-export class Canvas {
+class Canvas {
 
   constructor() {
     this.canvas = paper.setup(new paper.Canvas(500, 500));
@@ -36,10 +36,12 @@ export class Canvas {
 
 let canvas;
 
-export let CanvasInstance = (function () {
+exports.CanvasInstance = (function () {
   return function () {
     if (!canvas) canvas = new Canvas();
     return canvas;
   }
 })();
+
+exports.Canvas = Canvas;
 

@@ -1,6 +1,4 @@
-"use strict";
-
-export default class User {
+class User {
   constructor(id) {
     this._IMG_NUM = 9;
 
@@ -32,3 +30,5 @@ export default class User {
 };
 
 User.prototype.usedImage = [];
+
+module.exports = User;

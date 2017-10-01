@@ -1,16 +1,12 @@
-import express from 'express';
-import http from 'http';
-
-import { Drawing, Game } from './server/controllers';
-import { initIo } from './server/socket-io';
-
+const express = require('express');
+const http = require('http');
+const { Drawing, Game } = require('./server/controllers');
+const { initIo } = require('./server/socket-io');
 
 let app = express();
 let server = http.createServer(app);
 let io = initIo(server);
 
-
-const PORT = process.env.PORT || 3001;
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 app.use('/app', express.static(__dirname + '/client/app'));
 app.use('/images', express.static(__dirname + '/client/images'));
@@ -19,8 +15,8 @@ app.get('/*', (req, res) => {
   res.sendFile(__dirname + '/client/index.html');
 });
 
-
 io.on('connection', function (socket) {
+
   let drawing = new Drawing(io, socket);
   let game = new Game(io, socket);
 
@@ -68,7 +64,6 @@ io.on('connection', function (socket) {
   socket.on('disconnect', () => game.userQuit());
 });
 
-
-server.listen(PORT, () => {
-  console.log(`listening to port ${PORT}`);
-});
+server.listen(3001, () => {
+  console.log('listening to 3001...')
+})

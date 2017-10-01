@@ -1,8 +1,7 @@
-'use strict';
-import R from 'ramda';
-import User from './user';
+const R = require('ramda');
+const User = require('./user');
 
-export class Users {
+class Users {
 
   constructor() {
     this.users = {};
@@ -46,8 +45,8 @@ export class Users {
 }
 
 let users;
-
-export let UsersInstance = (function () {
+exports.Users = Users;
+exports.UsersInstance = (function () {
   return function () {
     if (!users) users = new Users();
     return users;

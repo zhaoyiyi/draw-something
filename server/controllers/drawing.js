@@ -1,4 +1,4 @@
-import { CanvasInstance } from '../models';
+const { CanvasInstance } = require('../models');
 
 class Drawing {
   constructor(io, socket) {
@@ -38,4 +38,4 @@ class Drawing {
 
 }
 
-export default Drawing;
+module.exports = Drawing;

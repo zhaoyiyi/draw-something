@@ -1,6 +1,6 @@
-import { UsersInstance, GameInstance } from '../models';
+const { UsersInstance, GameInstance } = require('../models');
 
-export default class Game {
+module.exports = class Game {
   constructor(io, socket) {
     this.users = UsersInstance();
     this.game = GameInstance();
