@@ -7,7 +7,7 @@ A small game where one person turn a random word to drawing and others guess the
 ### Installation
 
 ```
-git clone git@github.com:zhaoyiyi/draw-something.git
+git clone https://github.com/zhaoyiyi/draw-something
 cd draw-something
 npm install
 ```
