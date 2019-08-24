@@ -9,7 +9,7 @@ A small game where one person turn a random word to drawing and others guess the
 ```
 git clone git@github.com:zhaoyiyi/draw-something.git
 cd draw-something
-npm install
+docker-compose up
 ```
 Rename `config.sample.ts` in client/app folder to `config.ts`
 
