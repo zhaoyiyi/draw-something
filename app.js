@@ -64,6 +64,8 @@ io.on('connection', function (socket) {
   socket.on('disconnect', () => game.userQuit());
 });
 
-server.listen(3001, () => {
-  console.log('listening to 3001...')
+
+const port = process.env.PORT || 3001;
+server.listen(port, () => {
+  console.log(`listening to ${port}...`)
 })

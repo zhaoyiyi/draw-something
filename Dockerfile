@@ -1,4 +1,5 @@
 FROM node:12
+ENV PORT=${PORT}
 ADD . /app
 WORKDIR /app
 RUN apt-get update \
