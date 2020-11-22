@@ -1,0 +1,13 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  deploy-personal-website:
+    name: Lint code base
+    runs-on: ubuntu-latest
+    steps:
+      - name: call vercel deploy hook
+        run: curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_17BoYd5KUTmb3evvGxmZASOWrfJA/Dc6yATVZZV
