@@ -6,8 +6,19 @@ on:
 
 jobs:
   deploy-personal-website:
-    name: Lint code base
+    name: Deploy personal website
     runs-on: ubuntu-latest
     steps:
       - name: call vercel deploy hook
         run: curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_17BoYd5KUTmb3evvGxmZASOWrfJA/Dc6yATVZZV
+  deploy-heroku:
+    name: Deploy app to heroku
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.6.8
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: 'draw-something-game'
+          heroku_email: 'yi@yizhao.me'
+          usedocker: true
