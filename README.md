@@ -1,4 +1,4 @@
-# draw-something
+# Draw Something
 ## [PLAY](https://draw-something-game.herokuapp.com/)
 *Initial load may take some time*
 
